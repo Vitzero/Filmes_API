@@ -1,6 +1,8 @@
-﻿using FilmesAPI.Data;
+﻿using Azure;
+using FilmesAPI.Data;
 using FilmesAPI.Data.DTOs;
 using FilmesAPI.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmesAPI.Controllers;
@@ -20,7 +22,7 @@ public class FilmesController : ControllerBase
     [HttpPost]
     public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
     {
-        Filme filme = new Filme
+        Filme filme = new()
         {
             Titulo = filmeDto.Titulo,
             Duracao = filmeDto.Duracao,
@@ -33,16 +35,40 @@ public class FilmesController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Filme> PegarFilmes([FromQuery]int skip = 0, [FromQuery] int take = 50)
+    public IActionResult PegarFilmes([FromQuery]int skip = 0, [FromQuery] int take = 50)
     {
-        return _context.Filmes.Skip(skip).Take(take);
+        var listaFilmesDto = _context.Filmes
+        .OrderBy(f => f.Id) // garante ordem consistente
+        .Skip(skip)
+        .Take(take)
+        .Select(filme => new ReadFilmeDto
+        {
+            Titulo = filme.Titulo,
+            Genero = filme.Genero,
+            Duracao = filme.Duracao
+        })
+        .ToList();
+
+        return Ok(listaFilmesDto);
     }
 
 
     [HttpGet("todos")]
-    public List<Filme> PegarAllFilmes()
+    public IActionResult PegarAllFilmes()
     {
-        return _context.Filmes.ToList();
+        List<ReadFilmeDto> ListaFilmes = [];
+
+        foreach (var filme in _context.Filmes)
+        {
+            ListaFilmes.Add(new ReadFilmeDto
+            {
+                Titulo = filme.Titulo,
+                Genero = filme.Genero,
+                Duracao= filme.Duracao
+            });
+        }
+
+        return Ok(ListaFilmes);
     }
 
 
@@ -52,11 +78,80 @@ public class FilmesController : ControllerBase
         var filme = 
             _context.Filmes
             .FirstOrDefault(f => f.Id == id);
+        if (filme == null) return NotFound();
+
+        ReadFilmeDto filmeDto = new()
+        {
+            Titulo = filme.Titulo,
+            Genero = filme.Genero,
+            Duracao = filme.Duracao
+        };
+
+
+        return Ok(filmeDto);
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult AtualizaFilme(int id, [FromBody]UpdateFilmeDto update)
+    {
+        var filme = _context.Filmes
+            .FirstOrDefault(f => f.Id == id);
 
         if (filme == null) return NotFound();
-        return Ok(filme);
+
+        filme.Titulo = update.Titulo;
+        filme.Genero = update.Genero;
+        filme.Duracao = update.Duracao;
+
+        _context.SaveChanges();
+
+        return NoContent();
+    }
+    [HttpPut]
+    public IActionResult AtualizaFilmeParcialmente(int id, JsonPatchDocument<UpdateFilmeDto> patch)
+    {
+        var filme = _context.Filmes
+            .FirstOrDefault(f => f.Id == id);
+
+        if (filme == null) return NotFound();
+
+        var filmeParaAtualizar = new UpdateFilmeDto
+        {
+            Titulo = filme.Titulo,
+            Genero = filme.Genero,
+            Duracao = filme.Duracao
+        };
+
+        patch.ApplyTo(filmeParaAtualizar, ModelState);
+
+        if (!TryValidateModel(filmeParaAtualizar))
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        filme.Titulo = filmeParaAtualizar.Titulo;
+        filme.Genero = filmeParaAtualizar.Genero;
+        filme.Duracao = filmeParaAtualizar.Duracao;
+
+        _context.SaveChanges();
+
+        return NoContent();
     }
 
 
+    [HttpDelete("{id}")]
+    public IActionResult RemoverFilme(int id)
+    {
+        var filme = _context.Filmes
+            .FirstOrDefault(f => f.Id == id);
+
+        if (filme == null) return NotFound();
+
+        _context.Filmes.Remove(filme);
+
+        _context.SaveChanges();
+
+        return NoContent();
+    }
 
 }
