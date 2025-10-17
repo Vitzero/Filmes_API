@@ -4,6 +4,11 @@ namespace FilmesAPI.Models
 {
     public class Filme
     {
+        [Key]
+        [Required]
+        public int Id { get; set; }
+
+
         [Required(ErrorMessage = "O título do filme é obrigatório!")] 
         public string Titulo { get; set; }
         
@@ -15,7 +20,6 @@ namespace FilmesAPI.Models
         [MaxLength(50, ErrorMessage = "O tamanho do genero não pode exeder 50 caracteres")]
         public string Genero { get; set; }
 
-        public int Id { get; set; }
 
     }
 }
