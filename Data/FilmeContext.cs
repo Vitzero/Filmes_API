@@ -12,5 +12,6 @@ public class FilmeContext : DbContext
 
     // pega o a CLASSE filme, onde colocamos os campos required e KEY, para levar para uma tabela no banco automaticamente
     public DbSet<Filme> Filmes { get; set; }
+    public DbSet<Cinema> Cinemas { get; set; }
 
 }
