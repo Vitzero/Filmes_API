@@ -4,6 +4,7 @@ using FilmesAPI.Data.DTOs;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI.Controllers;
 
@@ -58,6 +59,7 @@ public class FilmesController : ControllerBase
         .Take(take)
         .Select(filme => new ReadFilmeDto
         {
+            Id = filme.Id,
             Titulo = filme.Titulo,
             Genero = filme.Genero,
             Duracao = filme.Duracao
@@ -74,21 +76,21 @@ public class FilmesController : ControllerBase
     /// <response code="200">Retorna todos os filmes cadastrados.</response>
     [HttpGet("todos")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult PegarAllFilmes()
+    public async Task<IActionResult> PegarAllFilmes()
     {
-        List<ReadFilmeDto> ListaFilmes = [];
+        var listaFilmesDto = await _context.Filmes
+         .OrderBy(f => f.Id) // garante ordem consistente
+         .Select(filme => new ReadFilmeDto
+         {
+             Id = filme.Id,
+             Titulo = filme.Titulo,
+             Genero = filme.Genero,
+             Duracao = filme.Duracao
+         })
+         .ToListAsync();
 
-        foreach (var filme in _context.Filmes)
-        {
-            ListaFilmes.Add(new ReadFilmeDto
-            {
-                Titulo = filme.Titulo,
-                Genero = filme.Genero,
-                Duracao= filme.Duracao
-            });
-        }
 
-        return Ok(ListaFilmes);
+        return Ok(listaFilmesDto);
     }
 
     /// <summary>
@@ -109,6 +111,7 @@ public class FilmesController : ControllerBase
 
         ReadFilmeDto filmeDto = new()
         {
+            Id = filme.Id,
             Titulo = filme.Titulo,
             Genero = filme.Genero,
             Duracao = filme.Duracao

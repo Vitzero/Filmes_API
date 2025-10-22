@@ -2,6 +2,7 @@
 using FilmesAPI.Data.DTOs;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI.Controllers;
 
@@ -30,6 +31,7 @@ public class CinemaController : ControllerBase
         Cinema cinemaModel = new()
         {
             Nome = cinema.Nome,
+            EnderecoId = cinema.EnderecoId
         };
 
         _context.Cinemas.Add(cinemaModel);
@@ -43,12 +45,25 @@ public class CinemaController : ControllerBase
     public IActionResult Cinemas([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         var cinemasList = _context.Cinemas
-            .OrderBy(f=>f.Id)
-            .Skip(skip)
-            .Take(take)
-            .ToList();
+               .Include(c => c.Endereco)
+               .OrderBy(f => f.Id)
+               .Skip(skip)
+               .Take(take)
+               .Select(c => new ReadCinemaDto
+               {
+                   Id = c.Id,
+                   Nome = c.Nome,
+                   ReadEnderecoDto = new ReadEnderecoDto
+                   {
+                       Id = c.Endereco.Id,
+                       Logradouro = c.Endereco.Logradouro,
+                       Numero = c.Endereco.Numero
+                   }
+               }
+               )
+               .ToList();
 
-        if(cinemasList.Count == 0)
+        if (cinemasList.Count == 0)
         {
             return NotFound();
         }
@@ -62,16 +77,21 @@ public class CinemaController : ControllerBase
     public IActionResult CinemaPorId([FromBody]int id)
     {
         var cinema = _context.Cinemas
-            .OrderBy(f => f.Id)
             .FirstOrDefault(f => f.Id == id);
         
         if (cinema == null)
         {
             return NotFound();
         }
+
         ReadCinemaDto response = new()
         {
-            Nome = cinema.Nome
+            Nome = cinema.Nome,
+            ReadEnderecoDto = new()
+            {
+                Logradouro = cinema.Endereco.Logradouro,
+                Numero = cinema.Endereco.Numero
+            }
         };
        
         return Ok(response);
