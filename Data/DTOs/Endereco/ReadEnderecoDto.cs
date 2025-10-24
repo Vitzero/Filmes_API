@@ -1,4 +1,4 @@
-﻿namespace FilmesAPI.Data.DTOs
+﻿namespace FilmesAPI.Data.DTOs.Endereco
 {
     public class ReadEnderecoDto
     {

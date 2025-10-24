@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FilmesAPI.Data.DTOs.Sessao;
+using System.ComponentModel.DataAnnotations;
 
-namespace FilmesAPI.Data.DTOs;
+namespace FilmesAPI.Data.DTOs.Filme;
 
 public class ReadFilmeDto
 {
     public int Id { get; set; }
     public string Titulo { get; set; }
-    public int Duracao { get; set; }
     public string Genero { get; set; }
+    public int Duracao { get; set; }
     public DateTime HoraDaConsulta { get; set; } = DateTime.Now;
 
     public ICollection<ReadSessaoDto> Sessoes { get; set; }

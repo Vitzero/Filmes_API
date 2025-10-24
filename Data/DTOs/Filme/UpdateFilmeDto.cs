@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace FilmesAPI.Data.DTOs;
+namespace FilmesAPI.Data.DTOs.Filme;
 
 public class UpdateFilmeDto
 {

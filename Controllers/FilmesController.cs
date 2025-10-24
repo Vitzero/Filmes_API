@@ -1,6 +1,7 @@
 ﻿using Azure;
 using FilmesAPI.Data;
 using FilmesAPI.Data.DTOs;
+using FilmesAPI.Data.DTOs.Filme;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -51,20 +52,29 @@ public class FilmesController : ControllerBase
     /// <response code="200">Retorna a lista de filmes.</response>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult PegarFilmes([FromQuery]int skip = 0, [FromQuery] int take = 50)
+    public IActionResult PegarFilmes([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
+        var horaConsulta = DateTime.Now;
+
         var listaFilmesDto = _context.Filmes
-        .OrderBy(f => f.Id) // garante ordem consistente
-        .Skip(skip)
-        .Take(take)
-        .Select(filme => new ReadFilmeDto
-        {
-            Id = filme.Id,
-            Titulo = filme.Titulo,
-            Genero = filme.Genero,
-            Duracao = filme.Duracao
-        })
-        .ToList();
+            .OrderBy(f => f.Id)
+            .Skip(skip)
+            .Take(take)
+            .Select(filme => new ReadFilmeDto
+            {
+                Id = filme.Id,
+                Titulo = filme.Titulo,
+                Genero = filme.Genero,
+                Duracao = filme.Duracao,
+                HoraDaConsulta = horaConsulta,
+                Sessoes = filme.Sessoes.Select(sessao => new ReadSessaoDto
+                {
+                    SessaoId = sessao.SessaoId,
+                    CinemaId = sessao.CinemaId,  // FK direta, não navegação
+                    FilmeId = sessao.FilmeId      // FK direta, não navegação
+                }).ToList()
+            })
+            .ToList();
 
         return Ok(listaFilmesDto);
     }
@@ -79,7 +89,9 @@ public class FilmesController : ControllerBase
     public async Task<IActionResult> PegarAllFilmes()
     {
         var listaFilmesDto = await _context.Filmes
-         .OrderBy(f => f.Id) // garante ordem consistente
+         .Include(f => f.Sessoes)
+                .ThenInclude(s => s.Cinema)
+            .OrderBy(f => f.Id) // garante ordem consistente
          .Select(filme => new ReadFilmeDto
          {
              Id = filme.Id,
@@ -106,6 +118,8 @@ public class FilmesController : ControllerBase
     {
         var filme = 
             _context.Filmes
+            .Include(f => f.Sessoes)
+                .ThenInclude(s => s.Cinema)
             .FirstOrDefault(f => f.Id == id);
         if (filme == null) return NotFound();
 

@@ -1,5 +1,5 @@
 ﻿using FilmesAPI.Data;
-using FilmesAPI.Data.DTOs;
+using FilmesAPI.Data.DTOs.Endereco;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
