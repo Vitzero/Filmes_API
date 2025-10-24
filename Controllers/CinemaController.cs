@@ -89,6 +89,7 @@ public class CinemaController : ControllerBase
             Nome = cinema.Nome,
             ReadEnderecoDto = new()
             {
+                Id = cinema.EnderecoId,
                 Logradouro = cinema.Endereco.Logradouro,
                 Numero = cinema.Endereco.Numero
             }

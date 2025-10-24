@@ -22,6 +22,11 @@ public class EnderecoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     public IActionResult AdicionaEndereco([FromBody] CreateEnderecoDto Endereco)
     {
+        if(Endereco == null)
+        {
+            NotFound();
+        }
+
         Endereco endereco = new()
         {
             Numero = Endereco.Numero,
