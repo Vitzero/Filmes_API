@@ -30,7 +30,8 @@ namespace FilmesAPI.Controllers
 
             Sessao sessao = new Sessao()
             {
-                SessaoId = create.SessaoId
+                FilmeId =  create.FilmeId,
+                CinemaId = create.CinemaId
             };
 
             _context.Sessoes.Add(sessao);

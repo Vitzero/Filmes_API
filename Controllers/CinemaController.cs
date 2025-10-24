@@ -59,6 +59,7 @@ public class CinemaController : ControllerBase
                        Logradouro = c.Endereco.Logradouro,
                        Numero = c.Endereco.Numero
                    }
+
                }
                )
                .ToList();

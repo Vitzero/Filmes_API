@@ -20,6 +20,6 @@ namespace FilmesAPI.Models
         [MaxLength(50, ErrorMessage = "O tamanho do genero não pode exeder 50 caracteres")]
         public string Genero { get; set; }
 
-
+        public virtual ICollection<Sessao> Sessoes { get; set; }
     }
 }
