@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.DTOs;
 using FilmesAPI.Data.DTOs.Filme;
+using FilmesAPI.Data.DTOs.Sessao;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -69,9 +70,9 @@ public class FilmesController : ControllerBase
                 HoraDaConsulta = horaConsulta,
                 Sessoes = filme.Sessoes.Select(sessao => new ReadSessaoDto
                 {
-                    SessaoId = sessao.SessaoId,
                     CinemaId = sessao.CinemaId,  // FK direta, não navegação
                     FilmeId = sessao.FilmeId      // FK direta, não navegação
+
                 }).ToList()
             })
             .ToList();

@@ -1,9 +1,12 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Data.DTOs;
 using FilmesAPI.Data.DTOs.Cinema;
+using FilmesAPI.Data.DTOs.Endereco;
+using FilmesAPI.Data.DTOs.Sessao;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace FilmesAPI.Controllers;
 
@@ -47,6 +50,7 @@ public class CinemaController : ControllerBase
     {
         var cinemasList = _context.Cinemas
                .Include(c => c.Endereco)
+               .Include(c => c.Sessoes)
                .OrderBy(f => f.Id)
                .Skip(skip)
                .Take(take)
@@ -59,7 +63,14 @@ public class CinemaController : ControllerBase
                        Id = c.Endereco.Id,
                        Logradouro = c.Endereco.Logradouro,
                        Numero = c.Endereco.Numero
-                   }
+                   },
+                   Sessoes = c.Sessoes
+                   .Select(sessao => new ReadSessaoDto
+                       {
+                           CinemaId = sessao.CinemaId,
+                           FilmeId = sessao.FilmeId
+                       }
+                   ).ToList()
 
                }
                )

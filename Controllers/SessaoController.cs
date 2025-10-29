@@ -47,12 +47,13 @@ namespace FilmesAPI.Controllers
         public IActionResult PegarPaginado([FromQuery] int skip = 0, [FromQuery] int take = 50)
         {
             var listaSessoes = _context.Sessoes
-                .OrderBy(x => x.SessaoId)
+                .OrderBy(x => x.CinemaId)
                 .Skip(skip)
                 .Take(take)
                 .Select(c => new ReadSessaoDto()
                 {
-                    SessaoId = c.SessaoId
+                    FilmeId = c.FilmeId,
+                    CinemaId = c.CinemaId
                 }
                 )
                 .ToList();
@@ -63,12 +64,12 @@ namespace FilmesAPI.Controllers
 
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{filmeId}/{CinemaId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult PegarSessaoPorId(int id)
+        public IActionResult PegarSessaoPorId(int filmeId, int cinemaId)
         {
-            var sessao = _context.Sessoes.FirstOrDefault(s => s.SessaoId == id);
+            var sessao = _context.Sessoes.FirstOrDefault(s => s.FilmeId == filmeId && s.CinemaId == cinemaId);
             if (sessao == null)
             {
                 return NotFound();
@@ -76,26 +77,29 @@ namespace FilmesAPI.Controllers
 
             ReadSessaoDto sessaoDto = new()
             {
-                SessaoId = sessao.SessaoId,
+                CinemaId = cinemaId,
+                FilmeId = filmeId 
+                
             };
 
             return Ok(sessaoDto);
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{filmeId}/{cinemaId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult AtualizarSessao(int id, [FromQuery] UpdateSessaoDto update) {
+        public IActionResult AtualizarSessao(int filmeid, int cinemaid, [FromQuery] UpdateSessaoDto update) {
 
-            var SessaoToAtt = _context.Sessoes.FirstOrDefault(s => s.SessaoId == id);
+            var SessaoToAtt = _context.Sessoes.FirstOrDefault(s => s.FilmeId == filmeid && s.CinemaId == cinemaid);
 
             if (SessaoToAtt == null)
             {
                 return NotFound();
             }
 
-            SessaoToAtt.SessaoId = update.SessaoId;
+            SessaoToAtt.FilmeId = update.FilmeId;
+            SessaoToAtt.CinemaId = update.CinemaId;
 
             _context.SaveChanges();
 
@@ -104,12 +108,12 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{filmeId}/{cinemaId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeletandoPorId(int id)
+        public IActionResult DeletandoPorId(int filmeId, int cinemaId)
         {
-            var sessaoToDelete = _context.Sessoes.FirstOrDefault(s => s.SessaoId == id);
+            var sessaoToDelete = _context.Sessoes.FirstOrDefault(s => s.FilmeId == filmeId && s.CinemaId == cinemaId);
             if(sessaoToDelete == null)
             {
                 return NotFound();
