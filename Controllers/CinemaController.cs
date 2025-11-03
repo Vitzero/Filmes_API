@@ -50,7 +50,6 @@ public class CinemaController : ControllerBase
     {
         var cinemasList = _context.Cinemas
                .Include(c => c.Endereco)
-               .Include(c => c.Sessoes)
                .OrderBy(f => f.Id)
                .Skip(skip)
                .Take(take)
@@ -64,13 +63,6 @@ public class CinemaController : ControllerBase
                        Logradouro = c.Endereco.Logradouro,
                        Numero = c.Endereco.Numero
                    },
-                   Sessoes = c.Sessoes
-                   .Select(sessao => new ReadSessaoDto
-                       {
-                           CinemaId = sessao.CinemaId,
-                           FilmeId = sessao.FilmeId
-                       }
-                   ).ToList()
 
                }
                )

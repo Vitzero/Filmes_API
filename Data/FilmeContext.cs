@@ -1,4 +1,5 @@
-﻿using FilmesAPI.Models;
+﻿using FilmesAPI.Data.Configuration;
+using FilmesAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 
@@ -10,30 +11,15 @@ public class FilmeContext : DbContext
     {
         
     }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Sessao>()
-            .HasKey(sessao => new { sessao.FilmeId, sessao.CinemaId });
+        base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Sessao>()
-            .HasOne(sessao => sessao.Cinema)
-            .WithMany(filme => filme.Sessoes)
-            .HasForeignKey(sessao => sessao.CinemaId);
-
-        modelBuilder.Entity<Sessao>()
-            .HasOne(sessao => sessao.Filme)
-            .WithMany(filme => filme.Sessoes)
-            .HasForeignKey(sessao => sessao.FilmeId);
-
-        modelBuilder.Entity<Endereco>()
-            .HasOne(endereco => endereco.Cinema)
-            .WithOne(cinema => cinema.Endereco)
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CinemaTypeConfiguration).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SessaoTypeConfiguration).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(FilmesTypeConfiguration).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(EnderecoTypeConfiguration).Assembly);
     }
-
-
-
 
     // pega o a CLASSE filme, onde colocamos os campos required e KEY, para levar para uma tabela no banco automaticamente
     public DbSet<Filme> Filmes { get; set; }
