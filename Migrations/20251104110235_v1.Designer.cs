@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FilmesAPI.Migrations
 {
     [DbContext(typeof(FilmeContext))]
-    [Migration("20251029113306_DeleteEnderecoRestrict")]
-    partial class DeleteEnderecoRestrict
+    [Migration("20251104110235_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,93 +26,117 @@ namespace FilmesAPI.Migrations
 
             modelBuilder.Entity("FilmesAPI.Models.Cinema", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("EnderecoId")
-                        .HasColumnType("int");
+                    b.Property<long>("EnderecoId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(80)")
+                        .HasColumnName("nome");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EnderecoId")
                         .IsUnique();
 
-                    b.ToTable("Cinemas");
+                    b.ToTable("cinemas", (string)null);
                 });
 
             modelBuilder.Entity("FilmesAPI.Models.Endereco", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Logradouro")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(300)")
+                        .HasColumnName("Logradouro");
 
-                    b.Property<int>("Numero")
-                        .HasColumnType("int");
+                    b.Property<long>("Numero")
+                        .HasColumnType("bigint")
+                        .HasColumnName("Numero");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Enderecos");
+                    b.ToTable("Enderecos", (string)null);
                 });
 
             modelBuilder.Entity("FilmesAPI.Models.Filme", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<int>("Duracao")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("minutos");
 
                     b.Property<string>("Genero")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("genero");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("Titulo");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Filmes");
+                    b.ToTable("Filmes", (string)null);
                 });
 
             modelBuilder.Entity("FilmesAPI.Models.Sessao", b =>
                 {
-                    b.Property<int>("FilmeId")
-                        .HasColumnType("int");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("Id");
 
-                    b.Property<int>("CinemaId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.HasKey("FilmeId", "CinemaId");
+                    b.Property<long>("CinemaId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("cinema_id");
+
+                    b.Property<long>("FilmeId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("filme_Id");
+
+                    b.Property<long?>("FilmeId1")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CinemaId");
 
-                    b.ToTable("Sessoes");
+                    b.HasIndex("FilmeId");
+
+                    b.HasIndex("FilmeId1");
+
+                    b.ToTable("Sessoes", (string)null);
                 });
 
             modelBuilder.Entity("FilmesAPI.Models.Cinema", b =>
                 {
                     b.HasOne("FilmesAPI.Models.Endereco", "Endereco")
-                        .WithOne("Cinema")
+                        .WithOne()
                         .HasForeignKey("FilmesAPI.Models.Cinema", "EnderecoId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Endereco");
@@ -121,31 +145,24 @@ namespace FilmesAPI.Migrations
             modelBuilder.Entity("FilmesAPI.Models.Sessao", b =>
                 {
                     b.HasOne("FilmesAPI.Models.Cinema", "Cinema")
-                        .WithMany("Sessoes")
+                        .WithMany()
                         .HasForeignKey("CinemaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FilmesAPI.Models.Filme", "Filme")
-                        .WithMany("Sessoes")
+                        .WithMany()
                         .HasForeignKey("FilmeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FilmesAPI.Models.Filme", null)
+                        .WithMany("Sessoes")
+                        .HasForeignKey("FilmeId1");
+
                     b.Navigation("Cinema");
 
                     b.Navigation("Filme");
-                });
-
-            modelBuilder.Entity("FilmesAPI.Models.Cinema", b =>
-                {
-                    b.Navigation("Sessoes");
-                });
-
-            modelBuilder.Entity("FilmesAPI.Models.Endereco", b =>
-                {
-                    b.Navigation("Cinema")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("FilmesAPI.Models.Filme", b =>

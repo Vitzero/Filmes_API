@@ -21,14 +21,14 @@ namespace FilmesAPI.Data.Configuration
             builder
                 .Property(x => x.CinemaId)
                 .HasColumnType("bigint")
-                .HasColumnName("Id")
+                .HasColumnName("cinema_id")
                 .IsRequired();
 
 
             builder
                 .Property(x => x.FilmeId)
                 .HasColumnType("bigint")
-                .HasColumnName("Id")
+                .HasColumnName("filme_Id")
                 .IsRequired();
 
 

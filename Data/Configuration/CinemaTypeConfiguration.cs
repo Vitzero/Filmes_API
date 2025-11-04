@@ -21,8 +21,8 @@ public class CinemaTypeConfiguration : IEntityTypeConfiguration<Cinema>
 
         builder
             .Property(x => x.Nome)
-            .HasColumnType("varchar(60)")
-            .HasColumnName("id")
+            .HasColumnType("varchar(80)")
+            .HasColumnName("nome")
             .IsRequired();
 
         builder
