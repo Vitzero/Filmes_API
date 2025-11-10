@@ -1,9 +1,9 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Data.DTOs;
-using FilmesAPI.Data.DTOs.Cinema;
 using FilmesAPI.Data.DTOs.Endereco;
 using FilmesAPI.Data.DTOs.Sessao;
 using FilmesAPI.Models;
+using FilmesAPI.Models.DTOs.Cinema;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

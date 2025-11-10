@@ -1,4 +1,4 @@
-﻿namespace FilmesAPI.Data.DTOs.Sessao
+﻿namespace FilmesAPI.Models.DTOs.Sessao
 {
     public class ReadSessaoDto
     {
