@@ -1,9 +1,7 @@
 ﻿using FilmesAPI.Data;
-using FilmesAPI.Data.DTOs;
-using FilmesAPI.Data.DTOs.Endereco;
-using FilmesAPI.Data.DTOs.Sessao;
 using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs.Cinema;
+using FilmesAPI.Models.DTOs.Endereco;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -79,11 +77,11 @@ public class CinemaController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult CinemaPorId([FromBody]int id)
+    public IActionResult CinemaPorId(int id)
     {
         var cinema = _context.Cinemas
             .FirstOrDefault(f => f.Id == id);
-        
+
         if (cinema == null)
         {
             return NotFound();
@@ -99,32 +97,32 @@ public class CinemaController : ControllerBase
                 Numero = cinema.Endereco.Numero
             }
         };
-       
+
         return Ok(response);
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult AtualizarTudo([FromBody] int id,[FromQuery] UpdateCinemaDto update)
+    public IActionResult AtualizarTudo([FromBody] int id, [FromQuery] UpdateCinemaDto update)
     {
         var cinema = _context.Cinemas
-            .FirstOrDefault(b=>b.Id == id);
+            .FirstOrDefault(b => b.Id == id);
 
         if (cinema == null)
         {
             return NotFound();
         }
-        
+
         cinema.Nome = update.Nome;
 
         return NoContent();
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult DeletePorId([FromBody]int id)
+    public IActionResult DeletePorId(int id)
     {
         var cinema = _context.Cinemas.FirstOrDefault(b=>b.Id == id);
         if(cinema == null)
