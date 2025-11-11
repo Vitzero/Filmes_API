@@ -17,13 +17,6 @@ public class FilmesController : ControllerBase
 {
     private readonly IFilmesService _service;
 
-    private FilmeContext _context;
-    public FilmesController(FilmeContext context)
-    {
-        _context = context;
-
-    }
-
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
