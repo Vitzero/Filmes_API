@@ -14,5 +14,6 @@ namespace FilmesAPI.Models
         public required string Genero { get; set; }
 
         public virtual ICollection<Sessao> Sessoes { get; set; }
+
     }
 }

@@ -2,6 +2,7 @@
 using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs.Cinema;
 using FilmesAPI.Models.DTOs.Endereco;
+using FilmesAPI.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -15,6 +16,8 @@ public class CinemaController : ControllerBase
 {
     private FilmeContext _context;
 
+    private readonly ICinemaService _cinemaService;
+
     public CinemaController(FilmeContext context)
     {
         _context = context;
@@ -25,20 +28,9 @@ public class CinemaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult AdicionaCinema([FromBody] CreateCinemaDto cinema)
     {
-        if (cinema == null)
-        {
-            return BadRequest();
-        }
+        _cinemaService.CriarCinema(cinema);
 
-        Cinema cinemaModel = new()
-        {
-            Nome = cinema.Nome,
-            EnderecoId = cinema.EnderecoId
-        };
-
-        _context.Cinemas.Add(cinemaModel);
-        _context.SaveChanges();
-        return CreatedAtAction(nameof(Cinemas), new { cinemaModel.Id }, cinemaModel);
+        return NoContent();
     }
 
     [HttpGet]
@@ -46,30 +38,7 @@ public class CinemaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Cinemas([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
-        var cinemasList = _context.Cinemas
-               .Include(c => c.Endereco)
-               .OrderBy(f => f.Id)
-               .Skip(skip)
-               .Take(take)
-               .Select(c => new ReadCinemaDto
-               {
-                   Id = c.Id,
-                   Nome = c.Nome,
-                   ReadEnderecoDto = new ReadEnderecoDto
-                   {
-                       Id = c.Endereco.Id,
-                       Logradouro = c.Endereco.Logradouro,
-                       Numero = c.Endereco.Numero
-                   },
-
-               }
-               )
-               .ToList();
-
-        if (cinemasList.Count == 0)
-        {
-            return NotFound();
-        }
+        var cinemasList = _cinemaService.GetCinemas(skip, take);
 
         return Ok(cinemasList);
     }
@@ -79,26 +48,10 @@ public class CinemaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult CinemaPorId(int id)
     {
-        var cinema = _context.Cinemas
-            .FirstOrDefault(f => f.Id == id);
 
-        if (cinema == null)
-        {
-            return NotFound();
-        }
+        var cinema = _cinemaService.GetCinemaPorId(id);
 
-        ReadCinemaDto response = new()
-        {
-            Nome = cinema.Nome,
-            ReadEnderecoDto = new()
-            {
-                Id = cinema.EnderecoId,
-                Logradouro = cinema.Endereco.Logradouro,
-                Numero = cinema.Endereco.Numero
-            }
-        };
-
-        return Ok(response);
+        return Ok(cinema);
     }
 
     [HttpPut("{id}")]
