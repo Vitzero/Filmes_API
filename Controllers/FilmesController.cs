@@ -17,20 +17,11 @@ public class FilmesController : ControllerBase
 {
     private readonly IFilmesService _service;
 
-    private FilmeContext _context;
-    public FilmesController(FilmeContext context)
-    {
-        _context = context;
-
-    }
-
-
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
+    public async Task<IActionResult> AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
     {
-        
-        _service.CriarFilme(filmeDto);
+        await _service.CriarFilme(filmeDto);
 
         return NoContent();
     }
@@ -82,7 +73,6 @@ public class FilmesController : ControllerBase
     public IActionResult AtualizaFilme(int id, [FromBody]UpdateFilmeDto update)
     {
         _service.AtualizaFilme(update, id);
-
 
         return NoContent();
     }

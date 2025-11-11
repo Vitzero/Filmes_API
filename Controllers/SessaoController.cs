@@ -1,9 +1,11 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs.Sessao;
+using FilmesAPI.Service;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace FilmesAPI.Controllers
 {
@@ -13,32 +15,22 @@ namespace FilmesAPI.Controllers
     {
         private FilmeContext _context;
 
+        private readonly ISessaoService _service;
+
         public SessaoController(FilmeContext Sessoes)
         {
             _context = Sessoes;
         }
-
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CriarSessao([FromQuery] CreateSessaoDto create)
         {
-            if (create == null) {
-                return BadRequest();
-            }
 
-            Sessao sessao = new Sessao()
-            {
-                FilmeId =  create.FilmeId,
-                CinemaId = create.CinemaId
-            };
+            _service.CriarSessao(create);
 
-            _context.Sessoes.Add(sessao);
-            _context.SaveChanges();
-
-            return Created();
-
+            return NoContent();
         }
 
         [HttpGet]
@@ -46,74 +38,45 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult PegarPaginado([FromQuery] int skip = 0, [FromQuery] int take = 50)
         {
-            var listaSessoes = _context.Sessoes
-                .OrderBy(x => x.CinemaId)
-                .Skip(skip)
-                .Take(take)
-                .Select(c => new ReadSessaoDto()
-                {
-                    FilmeId = c.FilmeId,
-                    CinemaId = c.CinemaId
-                }
-                )
-                .ToList();
+            var listaSessoesPag = _service.PegarFilmesPag(skip,take);
 
-            return Ok(listaSessoes);
+            return Ok(listaSessoesPag);
         }
-
-
 
         [HttpGet]
         [Route("{filmeId}/{CinemaId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult PegarSessaoPorId(int filmeId, int cinemaId)
+        public IActionResult PegarSessaoPorId(int id)
         {
-            var sessao = _context.Sessoes.FirstOrDefault(s => s.FilmeId == filmeId && s.CinemaId == cinemaId);
-            if (sessao == null)
-            {
-                return NotFound();
-            }
+            var Sessao = _service.PegarSessaoPorId(id);
 
-            ReadSessaoDto sessaoDto = new()
-            {
-                CinemaId = cinemaId,
-                FilmeId = filmeId 
-                
-            };
-
-            return Ok(sessaoDto);
+            return Ok(Sessao);
         }
 
         [HttpPut]
         [Route("{filmeId}/{cinemaId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult AtualizarSessao(int filmeid, int cinemaid, [FromQuery] UpdateSessaoDto update) {
+        public async Task<IActionResult> AtualizarSessao(int id, [FromQuery] UpdateSessaoDto update)
+        {
 
-            var SessaoToAtt = _context.Sessoes.FirstOrDefault(s => s.FilmeId == filmeid && s.CinemaId == cinemaid);
+            await _service.AtualizarSessao(id, update);
 
-            if (SessaoToAtt == null)
-            {
-                return NotFound();
-            }
 
-            SessaoToAtt.FilmeId = update.FilmeId;
-            SessaoToAtt.CinemaId = update.CinemaId;
-
-            _context.SaveChanges();
-
-            return Ok(SessaoToAtt);
-
+            return NoContent();
         }
 
         [HttpDelete]
-        [Route("{filmeId}/{cinemaId}")]
+        [Route("sessao/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeletandoPorId(int filmeId, int cinemaId)
+        public async Task<IActionResult> DeletandoPorId([FromRoute] int id)
         {
-            var sessaoToDelete = _context.Sessoes.FirstOrDefault(s => s.FilmeId == filmeId && s.CinemaId == cinemaId);
+            await _service.DeleteSessao(id);
+
+
+            var sessaoToDelete = _context.Sessoes.FirstOrDefault(s => s.Id == id);
             if(sessaoToDelete == null)
             {
                 return NotFound();
