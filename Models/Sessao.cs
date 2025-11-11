@@ -5,6 +5,8 @@ namespace FilmesAPI.Models;
 public class Sessao
 {
 
+    public int Id { get; set; }
+
     public int? FilmeId { get; set; }
 
     public virtual Filme Filme { get; set; }

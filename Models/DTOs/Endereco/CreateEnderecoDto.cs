@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FilmesAPI.Data.DTOs.Endereco
+namespace FilmesAPI.Models.DTOs.Endereco
 {
     public class CreateEnderecoDto
     {

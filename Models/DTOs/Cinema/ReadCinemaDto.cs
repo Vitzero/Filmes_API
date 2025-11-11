@@ -1,8 +1,8 @@
-﻿using FilmesAPI.Data.DTOs.Endereco;
-using FilmesAPI.Data.DTOs.Sessao;
+﻿using FilmesAPI.Models.DTOs.Endereco;
+using FilmesAPI.Models.DTOs.Sessao;
 using System.ComponentModel.DataAnnotations;
 
-namespace FilmesAPI.Data.DTOs.Cinema
+namespace FilmesAPI.Models.DTOs.Cinema
 {
     public class ReadCinemaDto
     {
