@@ -6,11 +6,6 @@ namespace FilmesAPI.Data.Configuration;
 
 public class EnderecoTypeConfiguration : IEntityTypeConfiguration<Endereco>
 {
-    public void Configure(IEntityTypeConfiguration<Endereco> builder)
-    {
-
-    }
-
     public void Configure(EntityTypeBuilder<Endereco> builder)
     {
         builder.ToTable("Enderecos");

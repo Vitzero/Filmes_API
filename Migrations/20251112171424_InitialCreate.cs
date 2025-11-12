@@ -5,7 +5,7 @@
 namespace FilmesAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class start : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -65,15 +65,15 @@ namespace FilmesAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    filme_Id = table.Column<int>(type: "int", nullable: false),
+                    filme_id = table.Column<int>(type: "int", nullable: false),
                     cinema_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sessoes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sessoes_Filmes_filme_Id",
-                        column: x => x.filme_Id,
+                        name: "FK_Sessoes_Filmes_filme_id",
+                        column: x => x.filme_id,
                         principalTable: "Filmes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -97,9 +97,9 @@ namespace FilmesAPI.Migrations
                 column: "cinema_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sessoes_filme_Id",
+                name: "IX_Sessoes_filme_id",
                 table: "Sessoes",
-                column: "filme_Id");
+                column: "filme_id");
         }
 
         /// <inheritdoc />

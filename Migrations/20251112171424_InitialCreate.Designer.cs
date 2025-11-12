@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FilmesAPI.Migrations
 {
     [DbContext(typeof(FilmeContext))]
-    [Migration("20251112164202_start")]
-    partial class start
+    [Migration("20251112171424_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,7 +115,7 @@ namespace FilmesAPI.Migrations
 
                     b.Property<int>("FilmeId")
                         .HasColumnType("int")
-                        .HasColumnName("filme_Id");
+                        .HasColumnName("filme_id");
 
                     b.HasKey("Id");
 
