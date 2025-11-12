@@ -1,6 +1,8 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs;
+using FilmesAPI.Repository;
+using FilmesAPI.Service;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,31 +13,15 @@ namespace FilmesAPI.Controllers;
 [Route("[controller]")]
 public class EnderecoController : ControllerBase
 {
-    private FilmeContext _context;
-
-    public EnderecoController(FilmeContext context)
-    {
-        _context = context;
-    }
+    private readonly IEnderecoService _enderecoService;
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public IActionResult AdicionaEndereco([FromBody] CreateEnderecoDto Endereco)
     {
-        if(Endereco == null)
-        {
-            NotFound();
-        }
+        _enderecoService.CreateEndereco(Endereco);
 
-        Endereco endereco = new()
-        {
-            Numero = Endereco.Numero,
-            Logradouro = Endereco.Logradouro,
-        };
-
-        _context.Enderecos.Add(endereco);
-        _context.SaveChanges();
-        return CreatedAtAction(nameof(PegarEnderecoPorID), new { id = endereco.Id }, endereco);
+        return NoContent();
     }
 
 
@@ -43,38 +29,18 @@ public class EnderecoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult PegarEndereco([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
-        var listaEnderecoDto = _context.Enderecos
-        .OrderBy(f => f.Id) // garante ordem consistente
-        .Skip(skip)
-        .Take(take)
-        .Select(endereco => new EnderecoResponseDTO
-        {
-            Logradouro = endereco.Logradouro,
-            Numero = endereco.Numero,
-            Id = endereco.Id
-        })
-        .ToList();
+        var enderecos = _enderecoService.GetEnderecos(skip, take);
 
-        return Ok(listaEnderecoDto);
+        return Ok(enderecos);
     }
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult PegarEnderecoPorID(int id)
     {
-        var endereco =
-            _context.Enderecos
-            .FirstOrDefault(f => f.Id == id);
-        if (endereco == null) return NotFound();
+        var endereco = _enderecoService.GetEnderecoById(id);
 
-        EnderecoResponseDTO enderecoDto = new()
-        {
-            Logradouro = endereco.Logradouro,
-            Numero = endereco.Numero
-        };
-
-
-        return Ok(enderecoDto);
+        return Ok(endereco);
     }
 
     [HttpPut("{id}")]
@@ -82,15 +48,7 @@ public class EnderecoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult AtualizarEndereco(int id, [FromBody] UpdateEnderecoDto update)
     {
-        var endereco = _context.Enderecos
-            .FirstOrDefault(f => f.Id == id);
-
-        if (endereco == null) return NotFound();
-
-        endereco.Logradouro = update.Logradouro;
-        endereco.Numero = update.Numero;
-
-        _context.SaveChanges();
+        _enderecoService.UpdateEndereco(update, id);
 
         return NoContent();
     }
@@ -100,17 +58,7 @@ public class EnderecoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult RemoverEndereco(int id)
     {
-        var endereco = _context.Enderecos
-            .FirstOrDefault(f => f.Id == id);
-
-        if (endereco == null)
-        {
-            return NotFound();
-        }
-
-        _context.Enderecos.Remove(endereco);
-
-        _context.SaveChanges();
+        _enderecoService.DeleteEndereco(id);
 
         return NoContent();
     }

@@ -10,14 +10,9 @@ namespace FilmesAPI.Controllers;
 
 public class CinemaController : ControllerBase
 {
-    private FilmeContext _context;
+  
 
     private readonly ICinemaService _cinemaService;
-
-    public CinemaController(FilmeContext context)
-    {
-        _context = context;
-    }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]

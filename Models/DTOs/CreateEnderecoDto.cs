@@ -9,5 +9,14 @@ namespace FilmesAPI.Models.DTOs
 
         [Required(ErrorMessage = "O campo 'Numero' é obrigatório!")]
         public int Numero { get; set; }
+
+        public Endereco ToEntity()
+        {
+            return new Endereco 
+            { 
+                Logradouro = Logradouro,
+                Numero = Numero 
+            };
+        }
     }
 }

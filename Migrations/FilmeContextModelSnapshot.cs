@@ -99,31 +99,26 @@ namespace FilmesAPI.Migrations
 
             modelBuilder.Entity("FilmesAPI.Models.Sessao", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long>("CinemaId")
-                        .HasColumnType("bigint")
+                    b.Property<int>("CinemaId")
+                        .HasColumnType("int")
                         .HasColumnName("cinema_id");
 
-                    b.Property<long>("FilmeId")
-                        .HasColumnType("bigint")
+                    b.Property<int>("FilmeId")
+                        .HasColumnType("int")
                         .HasColumnName("filme_Id");
-
-                    b.Property<long?>("FilmeId1")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CinemaId");
 
                     b.HasIndex("FilmeId");
-
-                    b.HasIndex("FilmeId1");
 
                     b.ToTable("Sessoes", (string)null);
                 });
@@ -148,14 +143,10 @@ namespace FilmesAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("FilmesAPI.Models.Filme", "Filme")
-                        .WithMany()
+                        .WithMany("Sessoes")
                         .HasForeignKey("FilmeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("FilmesAPI.Models.Filme", null)
-                        .WithMany("Sessoes")
-                        .HasForeignKey("FilmeId1");
 
                     b.Navigation("Cinema");
 

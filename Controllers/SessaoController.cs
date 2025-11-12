@@ -13,14 +13,8 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class SessaoController : ControllerBase
     {
-        private FilmeContext _context;
 
         private readonly ISessaoService _service;
-
-        public SessaoController(FilmeContext Sessoes)
-        {
-            _context = Sessoes;
-        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -44,7 +38,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{filmeId}/{CinemaId}")]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult PegarSessaoPorId(int id)
@@ -55,7 +49,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPut]
-        [Route("{filmeId}/{cinemaId}")]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AtualizarSessao(int id, [FromQuery] UpdateSessaoDto update)
@@ -68,22 +62,12 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("sessao/{id}")]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeletandoPorId([FromRoute] int id)
         {
             await _service.DeleteSessao(id);
-
-
-            var sessaoToDelete = _context.Sessoes.FirstOrDefault(s => s.Id == id);
-            if(sessaoToDelete == null)
-            {
-                return NotFound();
-            }
-
-            _context.Sessoes.Remove(sessaoToDelete);
-            _context.SaveChanges();
 
             return NoContent();
         }

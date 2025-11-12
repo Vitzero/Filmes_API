@@ -14,27 +14,29 @@ namespace FilmesAPI.Data.Configuration
 
             builder
                 .Property(x => x.Id)
-                .HasColumnType("bigint")
+                .HasColumnType("int")
                 .HasColumnName("Id")
                 .IsRequired();
 
             builder
                 .Property(x => x.CinemaId)
-                .HasColumnType("bigint")
+                .HasColumnType("int")
                 .HasColumnName("cinema_id")
                 .IsRequired();
 
 
             builder
                 .Property(x => x.FilmeId)
-                .HasColumnType("bigint")
-                .HasColumnName("filme_Id")
+                .HasColumnType("int")
+                .HasColumnName("filme_id")
                 .IsRequired();
 
 
+            // RELACIONAMENTO
+
             builder
                 .HasOne<Filme>(x => x.Filme)
-                .WithMany()
+                .WithMany(f => f.Sessoes)
                 .HasForeignKey(x => x.FilmeId)
                 .IsRequired();
 
