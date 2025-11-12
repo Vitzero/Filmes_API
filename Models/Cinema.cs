@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FilmesAPI.Models.DTOs;
+using System.ComponentModel.DataAnnotations;
 
 namespace FilmesAPI.Models;
 
@@ -8,4 +9,15 @@ public class Cinema
     public required string Nome { get; set; }
     public int EnderecoId { get; set; }
     public Endereco Endereco { get; set; }
+
+    public CinemaResponseDTO ToDto()
+    {
+        return new CinemaResponseDTO
+        {
+            Nome = Nome,
+            ReadEnderecoDto = Endereco.ToEntity(),
+            HoraDaConsulta = DateTime.Now,
+
+        };
+    }
 }

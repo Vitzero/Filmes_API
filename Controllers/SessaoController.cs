@@ -1,6 +1,6 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs.Sessao;
+using FilmesAPI.Models.DTOs;
 using FilmesAPI.Service;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;

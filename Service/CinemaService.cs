@@ -1,7 +1,8 @@
 ﻿using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs.Cinema;
+using FilmesAPI.Models.DTOs;
 using FilmesAPI.Repository;
 using Microsoft.AspNetCore.JsonPatch.Internal;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -11,8 +12,9 @@ namespace FilmesAPI.Service
     {
         Task CriarCinema(CreateCinemaDto cinema);
         List<Cinema> GetCinemas(int skip, int take);
-
-        Cinema GetCinemaPorId(int id);
+        CinemaResponseDTO GetCinemaPorId(int id);
+        Task AtualizarCinema(UpdateCinemaDto updateCinema, int id);
+        Task DeleteCinema(int id);
     }
 
     public class CinemaService : ICinemaService
@@ -25,7 +27,11 @@ namespace FilmesAPI.Service
             Cinema cinemaModel = new()
             {
                 Nome = cinema.Nome,
-                EnderecoId = cinema.EnderecoId
+                Endereco =
+                {
+                     Logradouro = cinema.Endereco.Logradouro,
+                     Numero = cinema.Endereco.Numero
+                }
             };
 
             _cinemaRepository.CinemaAdd(cinemaModel);
@@ -39,11 +45,11 @@ namespace FilmesAPI.Service
 
         }
 
-        public ReadCinemaDto GetCinemaPorId(int id)
+        public CinemaResponseDTO GetCinemaPorId(int id)
         {
              var cinema = _cinemaRepository.GetCinemaBanco(id);
 
-            ReadCinemaDto response = new()
+            CinemaResponseDTO response = new()
             {
                 Nome = cinema.Nome,
                 ReadEnderecoDto = new()
@@ -55,8 +61,22 @@ namespace FilmesAPI.Service
             };
 
 
-
             return response;
+        }
+        public async Task AtualizarCinema(UpdateCinemaDto updateCinema, int id)
+        {
+            var cinema = _cinemaRepository.GetCinemaBanco(id);
+
+            cinema = updateCinema.ToEntity();
+
+            await _cinemaRepository.AtualizarCinema(cinema);
+
+        }
+        public async Task DeleteCinema(int id)
+        {
+            var cinema = _cinemaRepository.GetCinemaBanco(id);
+
+            await _cinemaRepository.Deletar(cinema);
         }
 
     }

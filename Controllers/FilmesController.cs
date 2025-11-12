@@ -1,12 +1,7 @@
-﻿using Azure;
-using FilmesAPI.Data;
-using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs.Filme;
-using FilmesAPI.Models.DTOs.Sessao;
+﻿using FilmesAPI.Models.DTOs;
 using FilmesAPI.Service;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace FilmesAPI.Controllers;
 

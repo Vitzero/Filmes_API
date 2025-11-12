@@ -1,11 +1,7 @@
 ﻿using FilmesAPI.Data;
-using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs.Cinema;
-using FilmesAPI.Models.DTOs.Endereco;
+using FilmesAPI.Models.DTOs;
 using FilmesAPI.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace FilmesAPI.Controllers;
 
@@ -59,15 +55,7 @@ public class CinemaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult AtualizarTudo([FromBody] int id, [FromQuery] UpdateCinemaDto update)
     {
-        var cinema = _context.Cinemas
-            .FirstOrDefault(b => b.Id == id);
-
-        if (cinema == null)
-        {
-            return NotFound();
-        }
-
-        cinema.Nome = update.Nome;
+        _cinemaService.AtualizarCinema(update, id);
 
         return NoContent();
     }
@@ -77,14 +65,7 @@ public class CinemaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult DeletePorId(int id)
     {
-        var cinema = _context.Cinemas.FirstOrDefault(b=>b.Id == id);
-        if(cinema == null)
-        {
-            return NotFound();
-        }
-        
-        _context.Cinemas.Remove(cinema);
-        _context.SaveChanges();
+        _cinemaService.DeleteCinema(id);
         
         return NoContent();
     

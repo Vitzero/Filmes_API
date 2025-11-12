@@ -1,6 +1,6 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs.Endereco;
+using FilmesAPI.Models.DTOs;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +47,7 @@ public class EnderecoController : ControllerBase
         .OrderBy(f => f.Id) // garante ordem consistente
         .Skip(skip)
         .Take(take)
-        .Select(endereco => new ReadEnderecoDto
+        .Select(endereco => new EnderecoResponseDTO
         {
             Logradouro = endereco.Logradouro,
             Numero = endereco.Numero,
@@ -67,7 +67,7 @@ public class EnderecoController : ControllerBase
             .FirstOrDefault(f => f.Id == id);
         if (endereco == null) return NotFound();
 
-        ReadEnderecoDto enderecoDto = new()
+        EnderecoResponseDTO enderecoDto = new()
         {
             Logradouro = endereco.Logradouro,
             Numero = endereco.Numero

@@ -1,10 +1,6 @@
 ﻿using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs.Filme;
-using FilmesAPI.Models.DTOs.Sessao;
+using FilmesAPI.Models.DTOs;
 using FilmesAPI.Repository;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
-
 
 namespace FilmesAPI.Service
 {

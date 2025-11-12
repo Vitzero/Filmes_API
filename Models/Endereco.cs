@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FilmesAPI.Models.DTOs;
+using System.ComponentModel.DataAnnotations;
 
 namespace FilmesAPI.Models
 {
@@ -8,5 +9,14 @@ namespace FilmesAPI.Models
         public required string Logradouro { get; set; }
         public required int Numero { get; set; }
 
+
+        public EnderecoResponseDTO ToEntity()
+        {
+            return new EnderecoResponseDTO
+            {
+                Logradouro = Logradouro,
+                Numero = Numero,
+            };
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs.Sessao;
+using FilmesAPI.Models.DTOs;
 using FilmesAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 

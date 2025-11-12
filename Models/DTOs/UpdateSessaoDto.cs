@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FilmesAPI.Models.DTOs.Sessao
+namespace FilmesAPI.Models.DTOs
 {
     public class UpdateSessaoDto
     {

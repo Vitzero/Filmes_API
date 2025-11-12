@@ -1,6 +1,6 @@
-﻿namespace FilmesAPI.Models.DTOs.Endereco
+﻿namespace FilmesAPI.Models.DTOs
 {
-    public class ReadEnderecoDto
+    public class EnderecoResponseDTO
     {
         public int Id { get; set; }
 
