@@ -4,9 +4,9 @@ namespace FilmesAPI.Models.DTOs;
 
 public class CreateCinemaDto
 {
-    [Required(ErrorMessage = "O campo de nome é obrigatório.")]
+    [Required(ErrorMessage = "O campo 'Nome' é obrigatório.")]
     public string Nome { get; set; }
-    [Required(ErrorMessage = "O campo de CinemaId é obrigatório.")]
+    [Required(ErrorMessage = "O campo 'CinemaId' é obrigatório.")]
     public int CinemaId { get; set; }
     
     public Cinema ToEntity()

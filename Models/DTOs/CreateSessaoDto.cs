@@ -4,9 +4,9 @@ namespace FilmesAPI.Models.DTOs
 {
     public class CreateSessaoDto
     {
-        [Required]
+        [Required(ErrorMessage = "O FilmeId é obrigatório!")]
         public int FilmeId { get; set; }
-        [Required]
+        [Required(ErrorMessage = "O CinemaId é obrigatório!")]
         public int CinemaId { get; set; }
     }
 }

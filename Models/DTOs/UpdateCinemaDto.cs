@@ -7,6 +7,7 @@ namespace FilmesAPI.Models.DTOs
         [Required(ErrorMessage = "O campo NOME é obrigatório!")]
         public string Nome { get; set; }
 
+        [Required(ErrorMessage = "O campo EnderecoId é obrigatório!")]
         public int EnderecoId { get; set; }
 
 

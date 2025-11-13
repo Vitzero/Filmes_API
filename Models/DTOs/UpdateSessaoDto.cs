@@ -4,10 +4,10 @@ namespace FilmesAPI.Models.DTOs
 {
     public class UpdateSessaoDto
     {
-        [Required]
+        [Required(ErrorMessage = "O campo FilmeId é obrigatório!")]
         public int FilmeId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "O campo CinemaId é obrigatório!")]
         public int CinemaId { get; set; }
     }
 }
