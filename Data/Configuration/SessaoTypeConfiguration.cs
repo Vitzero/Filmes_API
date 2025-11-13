@@ -15,7 +15,7 @@ namespace FilmesAPI.Data.Configuration
             builder
                 .Property(x => x.Id)
                 .HasColumnType("int")
-                .HasColumnName("Id")
+                .HasColumnName("id")
                 .IsRequired();
 
             builder

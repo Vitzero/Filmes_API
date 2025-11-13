@@ -5,7 +5,7 @@
 namespace FilmesAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,10 +14,10 @@ namespace FilmesAPI.Migrations
                 name: "Enderecos",
                 columns: table => new
                 {
-                    id = table.Column<long>(type: "bigint", nullable: false)
+                    id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Logradouro = table.Column<string>(type: "varchar(300)", nullable: false),
-                    Numero = table.Column<long>(type: "bigint", nullable: false)
+                    logradouro = table.Column<string>(type: "varchar(300)", nullable: false),
+                    numero = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,10 +28,10 @@ namespace FilmesAPI.Migrations
                 name: "Filmes",
                 columns: table => new
                 {
-                    id = table.Column<long>(type: "bigint", nullable: false)
+                    id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Titulo = table.Column<string>(type: "varchar(200)", nullable: false),
-                    minutos = table.Column<int>(type: "int", nullable: false),
+                    titulo = table.Column<string>(type: "varchar(200)", nullable: false),
+                    duracao = table.Column<int>(type: "int", nullable: false),
                     genero = table.Column<string>(type: "varchar(100)", nullable: false)
                 },
                 constraints: table =>
@@ -43,17 +43,17 @@ namespace FilmesAPI.Migrations
                 name: "cinemas",
                 columns: table => new
                 {
-                    id = table.Column<long>(type: "bigint", nullable: false)
+                    id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     nome = table.Column<string>(type: "varchar(80)", nullable: false),
-                    EnderecoId = table.Column<long>(type: "bigint", nullable: false)
+                    endereco_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_cinemas", x => x.id);
                     table.ForeignKey(
-                        name: "FK_cinemas_Enderecos_EnderecoId",
-                        column: x => x.EnderecoId,
+                        name: "FK_cinemas_Enderecos_endereco_id",
+                        column: x => x.endereco_id,
                         principalTable: "Enderecos",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -63,14 +63,14 @@ namespace FilmesAPI.Migrations
                 name: "Sessoes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     filme_id = table.Column<int>(type: "int", nullable: false),
                     cinema_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sessoes", x => x.Id);
+                    table.PrimaryKey("PK_Sessoes", x => x.id);
                     table.ForeignKey(
                         name: "FK_Sessoes_Filmes_filme_id",
                         column: x => x.filme_id,
@@ -86,9 +86,9 @@ namespace FilmesAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_cinemas_EnderecoId",
+                name: "IX_cinemas_endereco_id",
                 table: "cinemas",
-                column: "EnderecoId",
+                column: "endereco_id",
                 unique: true);
 
             migrationBuilder.CreateIndex(

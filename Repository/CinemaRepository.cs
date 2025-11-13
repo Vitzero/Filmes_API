@@ -1,6 +1,7 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.JsonPatch.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI.Repository
 {
@@ -8,13 +9,13 @@ namespace FilmesAPI.Repository
     {
         Task CinemaAdd(Cinema cinema);
         List<Cinema> GetCinemasPag(int skip, int take);
-        Cinema GetCinemaBanco(int id);
+        Task<Cinema> GetCinemaBanco(int id);
         Task AtualizarCinema(Cinema cinema);
         Task Deletar(Cinema cinema);
 
     }
     
-    public class CinemaRepository
+    public class CinemaRepository : ICinemaRepository
     {
         private readonly FilmeContext context;
 
@@ -33,9 +34,12 @@ namespace FilmesAPI.Repository
 
             return cinemas;
         }
-        public async Task<Cinema?> GetCinemaBanco(int id)
+        public async Task<Cinema> GetCinemaBanco(int id)
         {
-            return context.Cinemas.FirstOrDefault(x=>x.Id == id);
+            
+            return await context.Cinemas
+                .Include(c => c.Endereco)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task AtualizarCinema(Cinema cinema)

@@ -20,7 +20,7 @@ namespace FilmesAPI.Service
         {
             Endereco endereroEntity = endereco.ToEntity();
 
-            _enderecoRepository.AdicionarEnderecoAsync(endereroEntity);
+            await _enderecoRepository.AdicionarEnderecoAsync(endereroEntity);
         }
 
         public async Task DeleteEndereco(int id)

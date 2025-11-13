@@ -6,7 +6,7 @@ namespace FilmesAPI.Models.DTOs
     {
         public DateTime HoraDaConsulta { get; set; } = DateTime.Now;
         public string Nome { get; set; }
-        public EnderecoResponseDTO ReadEnderecoDto { get; set; }
+        public int enderecoId { get; set; }
         public List<ReadSessaoDto> Sessoes { get; set; }
     }
 }

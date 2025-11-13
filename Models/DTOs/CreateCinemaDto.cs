@@ -6,18 +6,15 @@ public class CreateCinemaDto
 {
     [Required(ErrorMessage = "O campo de nome é obrigatório.")]
     public string Nome { get; set; }
-    public CreateEnderecoDto Endereco { get; set; }
+    [Required(ErrorMessage = "O campo de CinemaId é obrigatório.")]
+    public int CinemaId { get; set; }
     
     public Cinema ToEntity()
     {
         return new Cinema
         {
             Nome = Nome,
-            Endereco = new Endereco
-            {
-                Logradouro = Endereco.Logradouro,
-                Numero = Endereco.Numero
-            }
+            EnderecoId = CinemaId
         };
     }
 }

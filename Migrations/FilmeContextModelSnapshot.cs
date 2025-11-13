@@ -23,15 +23,16 @@ namespace FilmesAPI.Migrations
 
             modelBuilder.Entity("FilmesAPI.Models.Cinema", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long>("EnderecoId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("EnderecoId")
+                        .HasColumnType("int")
+                        .HasColumnName("endereco_id");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -48,21 +49,21 @@ namespace FilmesAPI.Migrations
 
             modelBuilder.Entity("FilmesAPI.Models.Endereco", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Logradouro")
                         .IsRequired()
                         .HasColumnType("varchar(300)")
-                        .HasColumnName("Logradouro");
+                        .HasColumnName("logradouro");
 
-                    b.Property<long>("Numero")
-                        .HasColumnType("bigint")
-                        .HasColumnName("Numero");
+                    b.Property<int>("Numero")
+                        .HasColumnType("int")
+                        .HasColumnName("numero");
 
                     b.HasKey("Id");
 
@@ -71,16 +72,16 @@ namespace FilmesAPI.Migrations
 
             modelBuilder.Entity("FilmesAPI.Models.Filme", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Duracao")
                         .HasColumnType("int")
-                        .HasColumnName("minutos");
+                        .HasColumnName("duracao");
 
                     b.Property<string>("Genero")
                         .IsRequired()
@@ -90,7 +91,7 @@ namespace FilmesAPI.Migrations
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasColumnType("varchar(200)")
-                        .HasColumnName("Titulo");
+                        .HasColumnName("titulo");
 
                     b.HasKey("Id");
 
@@ -102,7 +103,7 @@ namespace FilmesAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 

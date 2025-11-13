@@ -49,8 +49,8 @@ namespace FilmesAPI.Service
                     HoraDaConsulta = horaConsulta,
                     Sessoes = filme.Sessoes.Select(sessao => new ReadSessaoDto
                     {
-                        CinemaId = sessao.CinemaId,  // FK direta, não navegação
-                        FilmeId = sessao.FilmeId      // FK direta, não navegação
+                        CinemaId = sessao.CinemaId,
+                        FilmeId = sessao.FilmeId      
 
                     }).ToList()
                 })

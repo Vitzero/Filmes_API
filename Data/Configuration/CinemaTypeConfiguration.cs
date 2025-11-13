@@ -15,7 +15,7 @@ public class CinemaTypeConfiguration : IEntityTypeConfiguration<Cinema>
 
         builder
             .Property(x => x.Id)
-            .HasColumnType("bigint")
+            .HasColumnType("int")
             .HasColumnName("id")
             .IsRequired();
 
@@ -23,6 +23,12 @@ public class CinemaTypeConfiguration : IEntityTypeConfiguration<Cinema>
             .Property(x => x.Nome)
             .HasColumnType("varchar(80)")
             .HasColumnName("nome")
+            .IsRequired();
+
+        builder
+            .Property(x => x.EnderecoId)
+            .HasColumnType("int") // ou bigint se Endereco.Id for bigint
+            .HasColumnName("endereco_id")
             .IsRequired();
 
         builder

@@ -15,7 +15,7 @@ public class Cinema
         return new CinemaResponseDTO
         {
             Nome = Nome,
-            ReadEnderecoDto = Endereco.ToEntity(),
+            enderecoId = EnderecoId,
             HoraDaConsulta = DateTime.Now,
 
         };

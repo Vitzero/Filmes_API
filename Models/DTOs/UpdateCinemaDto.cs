@@ -7,7 +7,7 @@ namespace FilmesAPI.Models.DTOs
         [Required(ErrorMessage = "O campo NOME é obrigatório!")]
         public string Nome { get; set; }
 
-        public Endereco Endereco { get; set; }
+        public int EnderecoId { get; set; }
 
 
         public Cinema ToEntity()
@@ -15,11 +15,7 @@ namespace FilmesAPI.Models.DTOs
             return new Cinema
             {
                 Nome = Nome,
-                Endereco = new Endereco
-                {
-                    Logradouro = Endereco.Logradouro,
-                    Numero = Endereco.Numero
-                }
+                EnderecoId = EnderecoId
             };
         }
 

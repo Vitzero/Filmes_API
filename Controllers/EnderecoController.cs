@@ -15,13 +15,16 @@ public class EnderecoController : ControllerBase
 {
     private readonly IEnderecoService _enderecoService;
 
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    public IActionResult AdicionaEndereco([FromBody] CreateEnderecoDto Endereco)
+    public EnderecoController(IEnderecoService enderecoService)
     {
-        _enderecoService.CreateEndereco(Endereco);
+        _enderecoService = enderecoService;
+    }
 
-        return NoContent();
+    [HttpPost]
+    public async Task<IActionResult> AdicionaEndereco([FromBody] CreateEnderecoDto endereco)
+    {
+        await _enderecoService.CreateEndereco(endereco); 
+        return NoContent(); 
     }
 
 

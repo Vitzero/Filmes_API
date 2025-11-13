@@ -14,20 +14,20 @@ public class EnderecoTypeConfiguration : IEntityTypeConfiguration<Endereco>
 
         builder
             .Property(e => e.Id)
-            .HasColumnType("bigint")
+            .HasColumnType("int")
             .HasColumnName("id")
             .IsRequired();
 
         builder
             .Property(e => e.Numero)
-            .HasColumnType("bigint")
-            .HasColumnName("Numero")
+            .HasColumnType("int")
+            .HasColumnName("numero")
             .IsRequired();
 
         builder
             .Property(e => e.Logradouro)
             .HasColumnType("varchar(300)")
-            .HasColumnName("Logradouro")
+            .HasColumnName("logradouro")
             .IsRequired();
     }
 }

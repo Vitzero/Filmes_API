@@ -1,5 +1,7 @@
 using FilmesAPI.Controllers;
 using FilmesAPI.Data;
+using FilmesAPI.Repository;
+using FilmesAPI.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -7,6 +9,17 @@ using System.Reflection;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IEnderecoService, EnderecoService>();
+builder.Services.AddScoped<ICinemaService, CinemaService>();
+builder.Services.AddScoped<IFilmesService, FilmesService>();
+
+builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
+builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
+builder.Services.AddScoped<IFilmesRepository, FilmesRepository>();
+
+
+
 
 var connectionString = builder.Configuration.GetConnectionString("FilmeConnection");
 

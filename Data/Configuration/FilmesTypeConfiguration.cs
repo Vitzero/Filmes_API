@@ -14,20 +14,20 @@ namespace FilmesAPI.Data.Configuration
 
             builder
                 .Property(x => x.Id)
-                .HasColumnType("bigint")
+                .HasColumnType("int")
                 .HasColumnName("id")
                 .IsRequired();
 
             builder
                 .Property(x => x.Titulo)
                 .HasColumnType("varchar(200)")
-                .HasColumnName("Titulo")
+                .HasColumnName("titulo")
                 .IsRequired();
             
             builder
                 .Property(x => x.Duracao)
                 .HasColumnType("int")
-                .HasColumnName("minutos")
+                .HasColumnName("duracao")
                 .IsRequired();
             
             builder
