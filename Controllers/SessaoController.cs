@@ -39,6 +39,11 @@ namespace FilmesAPI.Controllers
         {
             var listaSessoesPag = _service.PegarFilmesPag(skip,take);
 
+            if (listaSessoesPag == null)
+            {
+                return NotFound();
+            }
+
             return Ok(listaSessoesPag);
         }
 
@@ -46,9 +51,14 @@ namespace FilmesAPI.Controllers
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult PegarSessaoPorId(int id)
+        public async Task<IActionResult> PegarSessaoPorId(int id)
         {
-            var Sessao = _service.PegarSessaoPorId(id);
+            var Sessao = await _service.PegarSessaoPorId(id);
+
+            if (Sessao == null)
+            {
+                return NotFound();
+            }
 
             return Ok(Sessao);
         }

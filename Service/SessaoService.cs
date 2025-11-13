@@ -9,7 +9,7 @@ namespace FilmesAPI.Service
     {
         Task CriarSessao(CreateSessaoDto create);
         List<ReadSessaoDto> PegarFilmesPag(int skip, int take);
-        ReadSessaoDto PegarSessaoPorId(int id);
+        Task<ReadSessaoDto> PegarSessaoPorId(int id);
         Task AtualizarSessao(int id, UpdateSessaoDto update);
         Task DeleteSessao(int id);
     }
@@ -52,9 +52,9 @@ namespace FilmesAPI.Service
             return listaSessoes;
         }
 
-        public ReadSessaoDto PegarSessaoPorId(int id)
+        public async Task<ReadSessaoDto> PegarSessaoPorId(int id)
         {
-            var sessao = _repository.PegarSessaoPorId(id);
+            var sessao = await _repository.PegarSessaoPorId(id);
             
             if (sessao == null)
             {
@@ -72,7 +72,7 @@ namespace FilmesAPI.Service
 
         public async Task AtualizarSessao(int id, UpdateSessaoDto update)
         {
-            var SessaoToAtt = _repository.PegarSessaoPorId(id);
+            var SessaoToAtt = await _repository.PegarSessaoPorId(id);
 
             SessaoToAtt.FilmeId = update.FilmeId;
             SessaoToAtt.CinemaId = update.CinemaId;
@@ -82,9 +82,9 @@ namespace FilmesAPI.Service
 
         public async Task DeleteSessao(int id)
         {
-            var sessao2Delete = _repository.PegarSessaoPorId(id);
+            var sessao2Delete = await _repository.PegarSessaoPorId(id);
 
-            _repository.DeleteSessao(sessao2Delete);
+            await _repository.DeleteSessao(sessao2Delete);
 
         }
 

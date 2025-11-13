@@ -1,5 +1,6 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI.Repository
 {
@@ -7,7 +8,7 @@ namespace FilmesAPI.Repository
     {
         Task CriarSessao(Sessao sessao);
         List<Sessao> PegarSessoesPag(int skip, int take);
-        Sessao PegarSessaoPorId(int id);
+        Task<Sessao> PegarSessaoPorId(int id);
         Task UpdateSessao(Sessao sessao);
         Task DeleteSessao(Sessao sessao);
     }
@@ -33,9 +34,9 @@ namespace FilmesAPI.Repository
             return listaPaginada;
         }
 
-        public Sessao PegarSessaoPorId(int id)
+        public async Task<Sessao> PegarSessaoPorId(int id)
         {
-            var sessao = _dbContext.Sessoes.FirstOrDefault(s => s.Id == id);
+            var sessao = await _dbContext.Sessoes.FirstOrDefaultAsync(s => s.Id == id);
 
             return sessao;
         }

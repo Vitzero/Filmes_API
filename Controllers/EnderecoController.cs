@@ -34,6 +34,11 @@ public class EnderecoController : ControllerBase
     {
         var enderecos = _enderecoService.GetEnderecos(skip, take);
 
+        if (enderecos == null)
+        {
+            return NotFound();
+        }
+
         return Ok(enderecos);
     }
 
@@ -43,15 +48,20 @@ public class EnderecoController : ControllerBase
     {
         var endereco = _enderecoService.GetEnderecoById(id);
 
+        if (endereco == null)
+        {
+            return NotFound();
+        }
+
         return Ok(endereco);
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult AtualizarEndereco(int id, [FromBody] UpdateEnderecoDto update)
+    public async Task<IActionResult> AtualizarEndereco(int id, [FromBody] UpdateEnderecoDto update)
     {
-        _enderecoService.UpdateEndereco(update, id);
+        await _enderecoService.UpdateEndereco(update, id);
 
         return NoContent();
     }

@@ -1,4 +1,5 @@
-﻿using FilmesAPI.Models.DTOs;
+﻿using FilmesAPI.Models;
+using FilmesAPI.Models.DTOs;
 using FilmesAPI.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,15 +49,20 @@ public class FilmesController : ControllerBase
     {
         var filmeDto = _service.PegarFilmePorID(id);
 
+        if (filmeDto == null)
+        {
+            return NotFound();
+        }
+
         return Ok(filmeDto);
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult AtualizaFilme(int id, [FromBody]UpdateFilmeDto update)
+    public async Task<IActionResult> AtualizaFilme(int id, [FromBody]UpdateFilmeDto update)
     {
-        _service.AtualizaFilme(update, id);
+        await _service.AtualizaFilme(update, id);
 
         return NoContent();
     }

@@ -1,4 +1,5 @@
 ﻿using FilmesAPI.Data;
+using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs;
 using FilmesAPI.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,11 @@ public class CinemaController : ControllerBase
     public async Task<IActionResult> Cinemas([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         var cinemasList = await _cinemaService.GetCinemas(skip, take);
+
+        if (cinemasList == null)
+        {
+            return NotFound();
+        }
 
         return Ok(cinemasList);
     }
