@@ -60,12 +60,19 @@ dotnet run
 ## 🛠️ Funcionalidades
 
 ✅ CRUD completo de filmes
+
 ✅ Validação de dados com Data Annotations
+
 ✅ Persistência de dados com Entity Framework Core
+
 ✅ API RESTful seguindo boas práticas
+
 ✅ Comunicação segura via HTTPS
+
 ✅ Migrations para versionamento do banco
+
 ✅ Mapeamento manual entre camadas
+
 ✅ Implementação de princípios SOLID
 
 ## 📝 Validações
