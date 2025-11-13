@@ -7,9 +7,8 @@ namespace FilmesAPI.Service
     public interface IFilmesService
     {
         Task CriarFilme(CreateFilmeDto filmeDto);
-        Task PegarFilmes(int skip, int take);
-        Task PegarFilmesSemPaginacao();
-        ReadFilmeDto PegarFilmePorID(int id);
+        Task<List<ReadFilmeDto>> PegarFilmes(int skip, int take);
+        Task<ReadFilmeDto> PegarFilmePorID(int id);
         Task AtualizaFilme(UpdateFilmeDto update, int id);
         Task RemoverFilme(int id);
 
@@ -18,7 +17,12 @@ namespace FilmesAPI.Service
     public class FilmesService : IFilmesService
     {
         private readonly IFilmesRepository _filmesRepository;
-        
+
+        public FilmesService(IFilmesRepository _filmesRepository)
+        {
+            this._filmesRepository = _filmesRepository;
+        }
+
         public async Task CriarFilme(CreateFilmeDto filmeDto)
         {
             Filme filme = new()
@@ -32,59 +36,36 @@ namespace FilmesAPI.Service
 
         }
 
-        public async Task PegarFilmes(int skip, int take)
+        public async Task<List<ReadFilmeDto>> PegarFilmes(int skip, int take)
         {
             var horaConsulta = DateTime.Now;
 
-            var listaFilmesDto = _filmesRepository.PegarFilmes()
-                .OrderBy(f => f.Id)
-                .Skip(skip)
-                .Take(take)
-                .Select(filme => new ReadFilmeDto
-                {
-                    Id = filme.Id,
-                    Titulo = filme.Titulo,
-                    Genero = filme.Genero,
-                    Duracao = filme.Duracao,
-                    HoraDaConsulta = horaConsulta,
-                    Sessoes = filme.Sessoes.Select(sessao => new ReadSessaoDto
-                    {
-                        CinemaId = sessao.CinemaId,
-                        FilmeId = sessao.FilmeId      
+            var filmes = await _filmesRepository.PegarFilmes(skip, take);
 
-                    }).ToList()
-                })
-                .ToList();
+
+            var listaFilmesDto = filmes.Select(filme => new ReadFilmeDto
+            {
+                Id = filme.Id,
+                Titulo = filme.Titulo,
+                Genero = filme.Genero,
+                Duracao = filme.Duracao,
+                HoraDaConsulta = horaConsulta,
+                Sessoes = filme.Sessoes.Select(sessao => new ReadSessaoDto
+                {
+                    CinemaId = sessao.CinemaId,
+                    FilmeId = sessao.FilmeId
+                }).ToList()
+            }).ToList();
+
+
+            return listaFilmesDto;
         }
 
-        public async Task PegarFilmesSemPaginacao()
-        {
-            var horaConsulta = DateTime.Now;
-
-            var listaFilmesDto = _filmesRepository.PegarFilmes()
-                .OrderBy(f => f.Id)
-                .Select(filme => new ReadFilmeDto
-                {
-                    Id = filme.Id,
-                    Titulo = filme.Titulo,
-                    Genero = filme.Genero,
-                    Duracao = filme.Duracao,
-                    HoraDaConsulta = horaConsulta,
-                    Sessoes = filme.Sessoes.Select(sessao => new ReadSessaoDto
-                    {
-                        CinemaId = sessao.CinemaId,  // FK direta, não navegação
-                        FilmeId = sessao.FilmeId      // FK direta, não navegação
-
-                    }).ToList()
-                })
-                .ToList();
-        }
-        public ReadFilmeDto PegarFilmePorID(int id)
+        public async Task<ReadFilmeDto> PegarFilmePorID(int id)
         {
 
-            var filme =
-            _filmesRepository.PegarFilmes()
-            .FirstOrDefault(x => x.Id == id);
+            var filme = await _filmesRepository.ObterPorIdAsync(id);
+            
 
             ReadFilmeDto filmeDto = new()
             {
@@ -101,8 +82,7 @@ namespace FilmesAPI.Service
         public async Task AtualizaFilme(UpdateFilmeDto update, int id)
         {
 
-            var filme = _filmesRepository.PegarFilmes()
-            .FirstOrDefault(f => f.Id == id);
+            var filme = await _filmesRepository.ObterPorIdAsync(id);
 
             filme.Titulo = update.Titulo;
             filme.Genero = update.Genero;
@@ -114,10 +94,9 @@ namespace FilmesAPI.Service
 
         public async Task RemoverFilme(int id)
         {
-            var filme = _filmesRepository.PegarFilmes()
-           .FirstOrDefault(f => f.Id == id);
+            var filme = await _filmesRepository.ObterPorIdAsync(id);
 
-           _filmesRepository.RemoveFilme(filme);
+           await _filmesRepository.RemoveFilme(filme);
 
         }
        

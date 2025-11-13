@@ -12,6 +12,11 @@ public class FilmesController : ControllerBase
 {
     private readonly IFilmesService _service;
 
+    public FilmesController(IFilmesService _service)
+    {
+        this._service = _service;
+    }
+
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
@@ -37,22 +42,6 @@ public class FilmesController : ControllerBase
         return Ok(listaFilmesDto);
     }
 
-
-    [HttpGet("todos")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> PegarAllFilmes()
-    {
-        var filmes = _service.PegarFilmesSemPaginacao();
-
-        if(filmes == null)
-        {
-            NoContent();
-        }
-
-        return Ok(filmes);
-    }
-
-
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult PegarFilmesPorID(int id)
@@ -75,9 +64,9 @@ public class FilmesController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult RemoverFilme(int id)
+    public async Task<IActionResult> RemoverFilme(int id)
     {
-        _service.RemoverFilme(id);
+        await _service.RemoverFilme(id);
 
         return NoContent();
     }

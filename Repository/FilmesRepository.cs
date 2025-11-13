@@ -1,6 +1,7 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.JsonPatch.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI.Repository
 {
@@ -8,7 +9,8 @@ namespace FilmesAPI.Repository
     {
         public Task AddFilme(Filme filme);
         
-        public List<Filme> PegarFilmes();
+        public Task<List<Filme>> PegarFilmes(int skip, int take);
+        Task<Filme?> ObterPorIdAsync(int id);
 
         public Task UpdateFilme(Filme filme);
 
@@ -24,11 +26,17 @@ namespace FilmesAPI.Repository
             this._dbContext = _dbContext;
         }
 
-        public List<Filme> PegarFilmes()
+        public async Task<List<Filme>> PegarFilmes(int skip, int take)
         {
-            var Lista = _dbContext.Filmes.ToList();
+            var Lista = await _dbContext.Filmes.Skip(skip).Take(take).ToListAsync();
             return Lista;
         }
+
+        public async Task<Filme?> ObterPorIdAsync(int id)
+        {
+            return await _dbContext.Filmes.FirstOrDefaultAsync(f => f.Id == id);
+        }
+
 
         public async Task AddFilme(Filme filme)
         {

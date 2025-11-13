@@ -1,6 +1,7 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI.Repository
 {
@@ -8,7 +9,7 @@ namespace FilmesAPI.Repository
     {
         Task AdicionarEnderecoAsync(Endereco endereco);
         List<Endereco> ObterTodosAsync(int skip, int take);
-        Endereco ObterPorId(int id);
+        Task<Endereco> ObterPorId(int id);
         Task AtualizarAsync(Endereco endereco);
         Task RemoverAsync(Endereco id);
     }
@@ -16,23 +17,28 @@ namespace FilmesAPI.Repository
     {
         private readonly FilmeContext _dbContext;
 
+        public EnderecoRepository(FilmeContext context)
+        {
+            _dbContext = context;
+        }
+
         public async Task AdicionarEnderecoAsync(Endereco endereco)
         {
             _dbContext.Enderecos.Add(endereco);
-            _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task AtualizarAsync(Endereco endereco)
         {
             _dbContext.Enderecos.Update(endereco);
-            _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Endereco ObterPorId(int id)
+        public async Task<Endereco?> ObterPorId(int id)
         {
-           var endereco = _dbContext.Enderecos.FirstOrDefault(en => en.Id == id);
-            return endereco;
+            return await _dbContext.Enderecos.FirstOrDefaultAsync(en => en.Id == id);
         }
+
 
         public List<Endereco> ObterTodosAsync(int skip, int take)
         {
@@ -46,6 +52,7 @@ namespace FilmesAPI.Repository
         public async Task RemoverAsync(Endereco endereco)
         {
             _dbContext.Enderecos.Remove(endereco);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

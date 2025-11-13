@@ -17,6 +17,11 @@ namespace FilmesAPI.Service
     {
         private readonly ISessaoRepository _repository;
 
+        public SessaoService(ISessaoRepository _repository)
+        {
+            this._repository = _repository;
+        }
+
         public async Task CriarSessao(CreateSessaoDto create)
         {
 

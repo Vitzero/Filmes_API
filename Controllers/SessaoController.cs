@@ -16,13 +16,18 @@ namespace FilmesAPI.Controllers
 
         private readonly ISessaoService _service;
 
+        public SessaoController(ISessaoService service)
+        {
+            _service = service;
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult CriarSessao([FromQuery] CreateSessaoDto create)
+        public async Task<IActionResult> CriarSessao([FromQuery] CreateSessaoDto create)
         {
 
-            _service.CriarSessao(create);
+            await _service.CriarSessao(create);
 
             return NoContent();
         }

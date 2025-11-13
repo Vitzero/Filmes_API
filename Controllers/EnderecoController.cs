@@ -59,9 +59,9 @@ public class EnderecoController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult RemoverEndereco(int id)
+    public async Task<IActionResult> RemoverEndereco(int id)
     {
-        _enderecoService.DeleteEndereco(id);
+        await _enderecoService.DeleteEndereco(id);
 
         return NoContent();
     }

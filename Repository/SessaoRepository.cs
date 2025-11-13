@@ -15,6 +15,10 @@ namespace FilmesAPI.Repository
     {
         private readonly FilmeContext _dbContext;
 
+        public SessaoRepository(FilmeContext _dbContext)
+        {
+            this._dbContext = _dbContext;
+        }
 
         public async Task CriarSessao(Sessao sessao)
         {

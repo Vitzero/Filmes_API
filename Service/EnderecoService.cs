@@ -1,6 +1,7 @@
 ﻿using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs;
 using FilmesAPI.Repository;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FilmesAPI.Service
 {
@@ -8,13 +9,18 @@ namespace FilmesAPI.Service
     {
         Task CreateEndereco(CreateEnderecoDto endereco);
         List<Endereco> GetEnderecos(int skip, int take);
-        Endereco GetEnderecoById(int id);
+        Task<Endereco> GetEnderecoById(int id);
         Task UpdateEndereco(UpdateEnderecoDto endereco, int id);
         Task DeleteEndereco(int id);
     }
     public class EnderecoService : IEnderecoService
     {
         private readonly IEnderecoRepository _enderecoRepository;
+
+        public EnderecoService(IEnderecoRepository repository)
+        {
+            _enderecoRepository = repository;
+        }
 
         public async Task CreateEndereco(CreateEnderecoDto endereco)
         {
@@ -25,13 +31,19 @@ namespace FilmesAPI.Service
 
         public async Task DeleteEndereco(int id)
         {
-            var endereco2delet = _enderecoRepository.ObterPorId(id);
-            _enderecoRepository.RemoverAsync(endereco2delet);
+            var endereco2delet = await _enderecoRepository.ObterPorId(id);
+
+            if (endereco2delet != null)
+            {
+                await _enderecoRepository.RemoverAsync(endereco2delet);
+            }
+
+            
         }
 
-        public Endereco GetEnderecoById(int id)
+        public async Task<Endereco> GetEnderecoById(int id)
         {
-            var embarcadoWithId = _enderecoRepository.ObterPorId(id);
+            var embarcadoWithId = await _enderecoRepository.ObterPorId(id);
             return embarcadoWithId;
         }
 
@@ -43,9 +55,9 @@ namespace FilmesAPI.Service
 
         public async Task UpdateEndereco(UpdateEnderecoDto endereco, int id)
         {
-            var endereco2update = _enderecoRepository.ObterPorId(id);
+            var endereco2update = await _enderecoRepository.ObterPorId(id);
 
-            _enderecoRepository.AtualizarAsync(endereco2update);
+            await _enderecoRepository.AtualizarAsync(endereco2update);
 
         }
     }

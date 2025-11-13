@@ -14,6 +14,11 @@ builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<ICinemaService, CinemaService>();
 builder.Services.AddScoped<IFilmesService, FilmesService>();
 
+
+builder.Services.AddScoped<ISessaoService, SessaoService>();
+builder.Services.AddScoped<ISessaoRepository, SessaoRepository>();
+
+
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
 builder.Services.AddScoped<IFilmesRepository, FilmesRepository>();

@@ -8,7 +8,7 @@ namespace FilmesAPI.Repository
     public interface ICinemaRepository
     {
         Task CinemaAdd(Cinema cinema);
-        List<Cinema> GetCinemasPag(int skip, int take);
+        Task<List<Cinema>> GetCinemasPag(int skip, int take);
         Task<Cinema> GetCinemaBanco(int id);
         Task AtualizarCinema(Cinema cinema);
         Task Deletar(Cinema cinema);
@@ -19,18 +19,23 @@ namespace FilmesAPI.Repository
     {
         private readonly FilmeContext context;
 
+        public CinemaRepository(FilmeContext _context)
+        {
+            context = _context;
+        }
+
         public async Task CinemaAdd(Cinema cinema)
         {
             context.Cinemas.Add(cinema);
             await context.SaveChangesAsync();
         }
-        public List<Cinema> GetCinemasPag(int skip, int take)
+        public Task<List<Cinema>> GetCinemasPag(int skip, int take)
         {
             var cinemas = context.Cinemas
+                .OrderBy(x=>x.Id)
                 .Skip(skip)
                 .Take(take)
-                .OrderBy(x=>x.Id)
-                .ToList();
+                .ToListAsync();
 
             return cinemas;
         }
