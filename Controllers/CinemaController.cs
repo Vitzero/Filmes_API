@@ -1,6 +1,4 @@
-﻿using FilmesAPI.Data;
-using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs;
+﻿using FilmesAPI.Models.DTOs;
 using FilmesAPI.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,24 +6,21 @@ namespace FilmesAPI.Controllers;
 
 [ApiController]
 [Route("[Controller]")]
-
 public class CinemaController : ControllerBase
 {
-
     public CinemaController(ICinemaService cinemaService)
     {
         _cinemaService = cinemaService;
     }
-
 
     private readonly ICinemaService _cinemaService;
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AdicionaCinema([FromBody] CreateCinemaDto cinema)
+    public async Task<IActionResult> PostCinema([FromBody] CreateCinemaDto cinema)
     {
-        await _cinemaService.CriarCinema(cinema);
+        await _cinemaService.Create(cinema);
 
         return NoContent();
     }
@@ -33,9 +28,9 @@ public class CinemaController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Cinemas([FromQuery] int skip = 0, [FromQuery] int take = 50)
+    public async Task<IActionResult> GetCinemas([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
-        var cinemasList = await _cinemaService.GetCinemas(skip, take);
+        var cinemasList = await _cinemaService.GetAll(skip, take);
 
         if (cinemasList == null)
         {
@@ -48,12 +43,14 @@ public class CinemaController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> CinemaPorId(int id)
+    public async Task<IActionResult> GetCinemaById(int id)
     {
-        var cinema = await _cinemaService.GetCinemaPorId(id);
+        var cinema = await _cinemaService.GetById(id);
 
         if (cinema == null)
+        {
             return NotFound();
+        }
 
         return Ok(cinema);
     }
@@ -61,9 +58,9 @@ public class CinemaController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AtualizarTudo(int id, [FromBody] UpdateCinemaDto update)
+    public async Task<IActionResult> UpdateCinema(int id, [FromBody] UpdateCinemaDto update)
     {
-        await _cinemaService.AtualizarCinema(update, id);
+        await _cinemaService.Update(update, id);
 
         return NoContent();
     }
@@ -71,13 +68,10 @@ public class CinemaController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeletePorId(int id)
+    public async Task<IActionResult> DeleteById(int id)
     {
-        await _cinemaService.DeleteCinema(id);
-        
+        await _cinemaService.Delete(id);
+
         return NoContent();
-    
     }
-
-
 }

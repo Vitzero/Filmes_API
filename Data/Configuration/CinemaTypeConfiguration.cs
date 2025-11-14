@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FilmesAPI.Data.Configuration;
 
-
 public class CinemaTypeConfiguration : IEntityTypeConfiguration<Cinema>
 {
     public void Configure(EntityTypeBuilder<Cinema> builder)
@@ -37,5 +36,4 @@ public class CinemaTypeConfiguration : IEntityTypeConfiguration<Cinema>
             .HasForeignKey<Cinema>(x => x.EnderecoId) // pai (cinema) possui o children pela fk (endereco)
             .IsRequired();
     }
-
 }

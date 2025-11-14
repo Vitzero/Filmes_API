@@ -6,7 +6,17 @@ namespace FilmesAPI.Models.DTOs
     {
         [Required(ErrorMessage = "O FilmeId é obrigatório!")]
         public int FilmeId { get; set; }
+
         [Required(ErrorMessage = "O CinemaId é obrigatório!")]
         public int CinemaId { get; set; }
+
+        public Sessao ToEntity()
+        {
+            return new Sessao
+            {
+                FilmeId = FilmeId,
+                CinemaId = CinemaId
+            };
+        }
     }
 }

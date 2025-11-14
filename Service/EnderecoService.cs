@@ -1,18 +1,22 @@
 ﻿using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs;
 using FilmesAPI.Repository;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FilmesAPI.Service
 {
     public interface IEnderecoService
     {
-        Task CreateEndereco(CreateEnderecoDto endereco);
-        List<Endereco> GetEnderecos(int skip, int take);
-        Task<Endereco> GetEnderecoById(int id);
-        Task UpdateEndereco(UpdateEnderecoDto endereco, int id);
-        Task DeleteEndereco(int id);
+        Task Create(CreateEnderecoDto endereco);
+
+        Task<IList<Endereco>> GetAll(int skip, int take);
+
+        Task<Endereco> GetById(int id);
+
+        Task Update(UpdateEnderecoDto endereco, int id);
+
+        Task Delete(int id);
     }
+
     public class EnderecoService : IEnderecoService
     {
         private readonly IEnderecoRepository _enderecoRepository;
@@ -22,43 +26,40 @@ namespace FilmesAPI.Service
             _enderecoRepository = repository;
         }
 
-        public async Task CreateEndereco(CreateEnderecoDto endereco)
+        public async Task Create(CreateEnderecoDto endereco)
         {
             Endereco endereroEntity = endereco.ToEntity();
 
-            await _enderecoRepository.AdicionarEnderecoAsync(endereroEntity);
+            await _enderecoRepository.Create(endereroEntity);
         }
 
-        public async Task DeleteEndereco(int id)
+        public async Task Delete(int id)
         {
-            var endereco2delet = await _enderecoRepository.ObterPorId(id);
+            var endereco2delet = await _enderecoRepository.GetById(id);
 
             if (endereco2delet != null)
             {
-                await _enderecoRepository.RemoverAsync(endereco2delet);
+                await _enderecoRepository.Delete(endereco2delet);
             }
-
-            
         }
 
-        public async Task<Endereco> GetEnderecoById(int id)
+        public async Task<Endereco> GetById(int id)
         {
-            var embarcadoWithId = await _enderecoRepository.ObterPorId(id);
+            var embarcadoWithId = await _enderecoRepository.GetById(id);
             return embarcadoWithId;
         }
 
-        public List<Endereco> GetEnderecos(int skip, int take)
+        public async Task<IList<Endereco>> GetAll(int skip, int take)
         {
-            var listEnd = _enderecoRepository.ObterTodosAsync(skip, take);
+            var listEnd = await _enderecoRepository.GetAll(skip, take);
             return listEnd;
         }
 
-        public async Task UpdateEndereco(UpdateEnderecoDto endereco, int id)
+        public async Task Update(UpdateEnderecoDto endereco, int id)
         {
-            var endereco2update = await _enderecoRepository.ObterPorId(id);
+            var endereco2update = await _enderecoRepository.GetById(id);
 
-            await _enderecoRepository.AtualizarAsync(endereco2update);
-
+            await _enderecoRepository.Update(endereco2update);
         }
     }
 }

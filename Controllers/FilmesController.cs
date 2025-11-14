@@ -1,41 +1,37 @@
-﻿using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs;
+﻿using FilmesAPI.Models.DTOs;
 using FilmesAPI.Service;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace FilmesAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
 public class FilmesController : ControllerBase
 {
     private readonly IFilmesService _service;
 
-    public FilmesController(IFilmesService _service)
+    public FilmesController(IFilmesService service)
     {
-        this._service = _service;
+        _service = service;
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
+    public async Task<IActionResult> PostFilme([FromBody] CreateFilmeDto filmeDto)
     {
-        await _service.CriarFilme(filmeDto);
+        await _service.Create(filmeDto);
 
         return NoContent();
     }
 
-
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public IActionResult PegarFilmes([FromQuery] int skip = 0, [FromQuery] int take = 50)
+    public IActionResult GetFilmes([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
-        var listaFilmesDto = _service.PegarFilmes(skip, take);
+        var listaFilmesDto = _service.GetFilmes(skip, take);
 
-        if(listaFilmesDto == null)
+        if (listaFilmesDto == null)
         {
             return NoContent();
         }
@@ -45,9 +41,9 @@ public class FilmesController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult PegarFilmesPorID(int id)
+    public async Task<IActionResult> GetFilmeById(int id)
     {
-        var filmeDto = _service.PegarFilmePorID(id);
+        var filmeDto = await _service.GetFilmeById(id);
 
         if (filmeDto == null)
         {
@@ -60,9 +56,9 @@ public class FilmesController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> AtualizaFilme(int id, [FromBody]UpdateFilmeDto update)
+    public async Task<IActionResult> UpdateFilme(int id, [FromBody] UpdateFilmeDto update)
     {
-        await _service.AtualizaFilme(update, id);
+        await _service.UpdateFilme(update, id);
 
         return NoContent();
     }
@@ -70,11 +66,10 @@ public class FilmesController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> RemoverFilme(int id)
+    public async Task<IActionResult> DeleteFilme(int id)
     {
-        await _service.RemoverFilme(id);
+        await _service.DeleteFilme(id);
 
         return NoContent();
     }
-
 }

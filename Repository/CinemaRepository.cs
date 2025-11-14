@@ -1,20 +1,22 @@
 ﻿using FilmesAPI.Data;
 using FilmesAPI.Models;
-using Microsoft.AspNetCore.JsonPatch.Internal;
 using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI.Repository
 {
     public interface ICinemaRepository
     {
-        Task CinemaAdd(Cinema cinema);
-        Task<List<Cinema>> GetCinemasPag(int skip, int take);
-        Task<Cinema> GetCinemaBanco(int id);
-        Task AtualizarCinema(Cinema cinema);
-        Task Deletar(Cinema cinema);
+        Task Create(Cinema cinema);
 
+        Task<IList<Cinema>> Get(int skip, int take);
+
+        Task<Cinema?> GetById(int id);
+
+        Task Update(Cinema cinema);
+
+        Task Delete(Cinema cinema);
     }
-    
+
     public class CinemaRepository : ICinemaRepository
     {
         private readonly FilmeContext context;
@@ -24,41 +26,40 @@ namespace FilmesAPI.Repository
             context = _context;
         }
 
-        public async Task CinemaAdd(Cinema cinema)
+        public async Task Create(Cinema cinema)
         {
             context.Cinemas.Add(cinema);
             await context.SaveChangesAsync();
         }
-        public Task<List<Cinema>> GetCinemasPag(int skip, int take)
+
+        public async Task<IList<Cinema>> Get(int skip, int take)
         {
-            var cinemas = context.Cinemas
-                .OrderBy(x=>x.Id)
+            var cinemas = await context.Cinemas
+                .OrderBy(x => x.Id)
                 .Skip(skip)
                 .Take(take)
                 .ToListAsync();
 
             return cinemas;
         }
-        public async Task<Cinema> GetCinemaBanco(int id)
+
+        public async Task<Cinema?> GetById(int id)
         {
-            
             return await context.Cinemas
                 .Include(c => c.Endereco)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task AtualizarCinema(Cinema cinema)
+        public async Task Update(Cinema cinema)
         {
             context.Cinemas.Update(cinema);
             await context.SaveChangesAsync();
         }
 
-        public async Task Deletar(Cinema cinema)
+        public async Task Delete(Cinema cinema)
         {
             context.Cinemas.Remove(cinema);
             await context.SaveChangesAsync();
         }
-
-
     }
 }

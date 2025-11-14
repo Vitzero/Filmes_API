@@ -1,11 +1,6 @@
-﻿using FilmesAPI.Data;
-using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs;
+﻿using FilmesAPI.Models.DTOs;
 using FilmesAPI.Service;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace FilmesAPI.Controllers
 {
@@ -13,7 +8,6 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class SessaoController : ControllerBase
     {
-
         private readonly ISessaoService _service;
 
         public SessaoController(ISessaoService service)
@@ -24,10 +18,9 @@ namespace FilmesAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CriarSessao([FromQuery] CreateSessaoDto create)
+        public async Task<IActionResult> PostSessao([FromQuery] CreateSessaoDto create)
         {
-
-            await _service.CriarSessao(create);
+            await _service.Create(create);
 
             return NoContent();
         }
@@ -35,9 +28,9 @@ namespace FilmesAPI.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult PegarPaginado([FromQuery] int skip = 0, [FromQuery] int take = 50)
+        public IActionResult GetAllSessoes([FromQuery] int skip = 0, [FromQuery] int take = 50)
         {
-            var listaSessoesPag = _service.PegarFilmesPag(skip,take);
+            var listaSessoesPag = _service.GetAll(skip, take);
 
             if (listaSessoesPag == null)
             {
@@ -51,9 +44,9 @@ namespace FilmesAPI.Controllers
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PegarSessaoPorId(int id)
+        public async Task<IActionResult> GetSessaoById(int id)
         {
-            var Sessao = await _service.PegarSessaoPorId(id);
+            var Sessao = await _service.GetById(id);
 
             if (Sessao == null)
             {
@@ -67,11 +60,9 @@ namespace FilmesAPI.Controllers
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AtualizarSessao(int id, [FromQuery] UpdateSessaoDto update)
+        public async Task<IActionResult> UpdateSessao(int id, [FromQuery] UpdateSessaoDto update)
         {
-
-            await _service.AtualizarSessao(id, update);
-
+            await _service.Update(id, update);
 
             return NoContent();
         }
@@ -80,9 +71,9 @@ namespace FilmesAPI.Controllers
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeletandoPorId([FromRoute] int id)
+        public async Task<IActionResult> DeleteSessao([FromRoute] int id)
         {
-            await _service.DeleteSessao(id);
+            await _service.Delete(id);
 
             return NoContent();
         }

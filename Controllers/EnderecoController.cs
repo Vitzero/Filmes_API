@@ -1,11 +1,6 @@
-﻿using FilmesAPI.Data;
-using FilmesAPI.Models;
-using FilmesAPI.Models.DTOs;
-using FilmesAPI.Repository;
+﻿using FilmesAPI.Models.DTOs;
 using FilmesAPI.Service;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI.Controllers;
 
@@ -21,18 +16,17 @@ public class EnderecoController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AdicionaEndereco([FromBody] CreateEnderecoDto endereco)
+    public async Task<IActionResult> PostEndereco([FromBody] CreateEnderecoDto endereco)
     {
-        await _enderecoService.CreateEndereco(endereco); 
-        return NoContent(); 
+        await _enderecoService.Create(endereco);
+        return NoContent();
     }
-
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult PegarEndereco([FromQuery] int skip = 0, [FromQuery] int take = 50)
+    public IActionResult GetEndereco([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
-        var enderecos = _enderecoService.GetEnderecos(skip, take);
+        var enderecos = _enderecoService.GetAll(skip, take);
 
         if (enderecos == null)
         {
@@ -44,9 +38,9 @@ public class EnderecoController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult PegarEnderecoPorID(int id)
+    public IActionResult GetEnderecoById(int id)
     {
-        var endereco = _enderecoService.GetEnderecoById(id);
+        var endereco = _enderecoService.GetById(id);
 
         if (endereco == null)
         {
@@ -59,9 +53,9 @@ public class EnderecoController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> AtualizarEndereco(int id, [FromBody] UpdateEnderecoDto update)
+    public async Task<IActionResult> UpdateEndereco(int id, [FromBody] UpdateEnderecoDto update)
     {
-        await _enderecoService.UpdateEndereco(update, id);
+        await _enderecoService.Update(update, id);
 
         return NoContent();
     }
@@ -69,9 +63,9 @@ public class EnderecoController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> RemoverEndereco(int id)
+    public async Task<IActionResult> DeleteEndereco(int id)
     {
-        await _enderecoService.DeleteEndereco(id);
+        await _enderecoService.Delete(id);
 
         return NoContent();
     }

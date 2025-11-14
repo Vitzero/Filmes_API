@@ -8,7 +8,7 @@ namespace FilmesAPI.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Sessao> builder)
         {
-            builder.ToTable("Sessoes");
+            builder.ToTable("sessoes");
 
             builder.HasKey(x => x.Id);
 
@@ -24,13 +24,11 @@ namespace FilmesAPI.Data.Configuration
                 .HasColumnName("cinema_id")
                 .IsRequired();
 
-
             builder
                 .Property(x => x.FilmeId)
                 .HasColumnType("int")
                 .HasColumnName("filme_id")
                 .IsRequired();
-
 
             // RELACIONAMENTO
 
@@ -45,7 +43,6 @@ namespace FilmesAPI.Data.Configuration
                 .WithMany()
                 .HasForeignKey(x => x.CinemaId)
                 .IsRequired();
-
         }
     }
 }

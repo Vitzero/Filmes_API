@@ -1,18 +1,22 @@
 ﻿using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs;
 using FilmesAPI.Repository;
-using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI.Service
 {
     public interface ISessaoService
     {
-        Task CriarSessao(CreateSessaoDto create);
-        List<ReadSessaoDto> PegarFilmesPag(int skip, int take);
-        Task<ReadSessaoDto> PegarSessaoPorId(int id);
-        Task AtualizarSessao(int id, UpdateSessaoDto update);
-        Task DeleteSessao(int id);
+        Task Create(CreateSessaoDto create);
+
+        IList<SessaoResponseDTO> GetAll(int skip, int take);
+
+        Task<SessaoResponseDTO> GetById(int id);
+
+        Task Update(int id, UpdateSessaoDto update);
+
+        Task Delete(int id);
     }
+
     public class SessaoService : ISessaoService
     {
         private readonly ISessaoRepository _repository;
@@ -22,26 +26,24 @@ namespace FilmesAPI.Service
             this._repository = _repository;
         }
 
-        public async Task CriarSessao(CreateSessaoDto create)
+        public async Task Create(CreateSessaoDto create)
         {
-
             Sessao sessao = new Sessao()
             {
                 FilmeId = create.FilmeId,
                 CinemaId = create.CinemaId
             };
 
-            await _repository.CriarSessao(sessao);
+            await _repository.Create(sessao);
         }
 
-        public List<ReadSessaoDto> PegarFilmesPag(int skip, int take)
+        public IList<SessaoResponseDTO> GetAll(int skip, int take)
         {
-
-            var listaSessoes = _repository.PegarSessoesPag( skip,  take)
+            var listaSessoes = _repository.GetAll(skip, take)
                 .OrderBy(x => x.CinemaId)
                 .Skip(skip)
                 .Take(take)
-                .Select(c => new ReadSessaoDto()
+                .Select(c => new SessaoResponseDTO()
                 {
                     FilmeId = c.FilmeId,
                     CinemaId = c.CinemaId
@@ -52,16 +54,16 @@ namespace FilmesAPI.Service
             return listaSessoes;
         }
 
-        public async Task<ReadSessaoDto> PegarSessaoPorId(int id)
+        public async Task<SessaoResponseDTO> GetById(int id)
         {
-            var sessao = await _repository.PegarSessaoPorId(id);
-            
+            var sessao = await _repository.GetById(id);
+
             if (sessao == null)
             {
                 return null;
             }
 
-            ReadSessaoDto sessaoDto = new()
+            SessaoResponseDTO sessaoDto = new()
             {
                 CinemaId = sessao.CinemaId,
                 FilmeId = sessao.FilmeId
@@ -70,23 +72,21 @@ namespace FilmesAPI.Service
             return sessaoDto;
         }
 
-        public async Task AtualizarSessao(int id, UpdateSessaoDto update)
+        public async Task Update(int id, UpdateSessaoDto update)
         {
-            var SessaoToAtt = await _repository.PegarSessaoPorId(id);
+            var SessaoToAtt = await _repository.GetById(id);
 
             SessaoToAtt.FilmeId = update.FilmeId;
             SessaoToAtt.CinemaId = update.CinemaId;
 
-            await _repository.UpdateSessao(SessaoToAtt);
+            await _repository.Update(SessaoToAtt);
         }
 
-        public async Task DeleteSessao(int id)
+        public async Task Delete(int id)
         {
-            var sessao2Delete = await _repository.PegarSessaoPorId(id);
+            var sessao2Delete = await _repository.GetById(id);
 
-            await _repository.DeleteSessao(sessao2Delete);
-
+            await _repository.Delete(sessao2Delete);
         }
-
     }
 }

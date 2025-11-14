@@ -8,7 +8,7 @@ namespace FilmesAPI.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Filme> builder)
         {
-            builder.ToTable("Filmes");
+            builder.ToTable("filmes");
 
             builder.HasKey(x => x.Id);
 
@@ -23,23 +23,18 @@ namespace FilmesAPI.Data.Configuration
                 .HasColumnType("varchar(200)")
                 .HasColumnName("titulo")
                 .IsRequired();
-            
+
             builder
                 .Property(x => x.Duracao)
                 .HasColumnType("int")
                 .HasColumnName("duracao")
                 .IsRequired();
-            
+
             builder
                 .Property(x => x.Genero)
                 .HasColumnType("varchar(100)")
                 .HasColumnName("genero")
                 .IsRequired();
-
-
-
-
         }
-    
     }
 }

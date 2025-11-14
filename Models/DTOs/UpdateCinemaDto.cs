@@ -10,7 +10,6 @@ namespace FilmesAPI.Models.DTOs
         [Required(ErrorMessage = "O campo EnderecoId é obrigatório!")]
         public int EnderecoId { get; set; }
 
-
         public Cinema ToEntity()
         {
             return new Cinema
@@ -19,6 +18,5 @@ namespace FilmesAPI.Models.DTOs
                 EnderecoId = EnderecoId
             };
         }
-
     }
 }

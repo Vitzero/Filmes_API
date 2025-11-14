@@ -12,10 +12,10 @@ namespace FilmesAPI.Models.DTOs
 
         public Endereco ToEntity()
         {
-            return new Endereco 
-            { 
+            return new Endereco
+            {
                 Logradouro = Logradouro,
-                Numero = Numero 
+                Numero = Numero
             };
         }
     }

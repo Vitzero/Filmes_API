@@ -1,21 +1,20 @@
 ﻿using FilmesAPI.Models;
 using FilmesAPI.Models.DTOs;
 using FilmesAPI.Repository;
-using Microsoft.AspNetCore.JsonPatch.Internal;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace FilmesAPI.Service
 {
     public interface ICinemaService
     {
-        Task CriarCinema(CreateCinemaDto cinema);
-        Task<List<CinemaResponseDTO>> GetCinemas(int skip, int take);
-        Task<CinemaResponseDTO?> GetCinemaPorId(int id);
-        Task AtualizarCinema(UpdateCinemaDto updateCinema, int id);
-        Task DeleteCinema(int id);
+        Task Create(CreateCinemaDto cinema);
+
+        Task<IList<CinemaResponseDTO>> GetAll(int skip, int take);
+
+        Task<CinemaResponseDTO?> GetById(int id);
+
+        Task Update(UpdateCinemaDto updateCinema, int id);
+
+        Task Delete(int id);
     }
 
     public class CinemaService : ICinemaService
@@ -27,54 +26,53 @@ namespace FilmesAPI.Service
             this._cinemaRepository = _cinemaRepository;
         }
 
-        public async Task CriarCinema(CreateCinemaDto cinema)
+        public async Task Create(CreateCinemaDto cinema)
         {
-
             Cinema cinemaModel = new()
             {
                 Nome = cinema.Nome,
                 EnderecoId = cinema.CinemaId
             };
 
-            await _cinemaRepository.CinemaAdd(cinemaModel);
-           
-        }
-        public async Task<List<CinemaResponseDTO>> GetCinemas(int skip, int take)
-        {
-            var cinemas = await _cinemaRepository.GetCinemasPag(skip, take);
-
-            var c = cinemas.Select(c=>c.ToDto()).ToList();
-
-            return c;
-
+            await _cinemaRepository.Create(cinemaModel);
         }
 
-        public async Task<CinemaResponseDTO?> GetCinemaPorId(int id)
+        public async Task<IList<CinemaResponseDTO>> GetAll(int skip, int take)
         {
-            Cinema? cinema = await _cinemaRepository.GetCinemaBanco(id);
+            var cinemas = await _cinemaRepository.Get(skip, take);
+
+            var CinemasToDto = cinemas.Select(c => c.ToDto()).ToList();
+
+            return CinemasToDto;
+        }
+
+        public async Task<CinemaResponseDTO?> GetById(int id)
+        {
+            Cinema? cinema = await _cinemaRepository.GetById(id);
 
             if (cinema == null)
+            {
                 return null;
+            }
 
             return cinema.ToDto();
         }
 
-        public async Task AtualizarCinema(UpdateCinemaDto updateCinema, int id)
+        public async Task Update(UpdateCinemaDto updateCinema, int id)
         {
-            var cinema = await _cinemaRepository.GetCinemaBanco(id);
+            var cinema = await _cinemaRepository.GetById(id);
 
             cinema.Nome = updateCinema.Nome;
             cinema.EnderecoId = updateCinema.EnderecoId;
 
-            await _cinemaRepository.AtualizarCinema(cinema);
-
+            await _cinemaRepository.Update(cinema);
         }
-        public async Task DeleteCinema(int id)
+
+        public async Task Delete(int id)
         {
-            var cinema = await _cinemaRepository.GetCinemaBanco(id);
+            var cinema = await _cinemaRepository.GetById(id);
 
-            await _cinemaRepository.Deletar(cinema);
+            await _cinemaRepository.Delete(cinema);
         }
-
     }
 }
