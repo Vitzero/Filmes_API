@@ -34,12 +34,12 @@ Editor de código (recomendado: Visual Studio ou VS Code)
 
 ## 🔧 Instalação
 
-- 1. Clone o repositório
+1. Clone o repositório
 
 git clone https://github.com/Vitzero/Filmes_API.git
 cd Filmes_API
 
-- 2. Configure a connection string
+2. Configure a connection string
 Edite o arquivo appsettings.json e configure a string de conexão com seu SQL Server:
 
 {
@@ -48,44 +48,31 @@ Edite o arquivo appsettings.json e configure a string de conexão com seu SQL Se
   }
 }
 
-- 3. Execute as migrations
+3. Execute as migrations
 
 dotnet ef database update
 
-- 4. Execute a aplicação
+4. Execute a aplicação
 
 dotnet run
-
-## 📂 Estrutura do Projeto
-
-Filmes_API/
-├── .git/                          # Controle de versão Git
-├── Controllers/                   # Controladores da API
-├── Data/                          # Contexto do Entity Framework
-├── Docs/                          # Documentação adicional
-├── Migrations/                    # Migrations do EF Core
-├── Models/                        # Modelos de domínio e entidades
-├── Properties/                    # Configurações e propriedades do projeto
-├── Repository/                    # Camada de repositório
-├── Service/                       # Camada de serviços
-├── .gitignore                     # Arquivos ignorados pelo Git
-├── Dockerfile                     # Configuração Docker
-├── FilmesAPI.csproj               # Arquivo de projeto C#
-├── FilmesAPI.csproj.user          # Configurações de usuário do projeto
-├── FilmesAPI.http                 # Requisições HTTP de teste
-├── FilmesAPI.sln                  # Solution do Visual Studio
-└── Program.cs                     # Ponto de entrada da aplicação
 
 
 ## 🛠️ Funcionalidades
 
 ✅ CRUD completo de filmes
+
 ✅ Validação de dados com Data Annotations
+
 ✅ Persistência de dados com Entity Framework Core
+
 ✅ API RESTful seguindo boas práticas
+
 ✅ Comunicação segura via HTTPS
+
 ✅ Migrations para versionamento do banco
+
 ✅ Mapeamento manual entre camadas
+
 ✅ Implementação de princípios SOLID
 
 ## 📝 Validações
